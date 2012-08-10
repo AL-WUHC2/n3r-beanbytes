@@ -116,7 +116,7 @@ public class BeanListTest {
     public void testEmpty() {
         Bean1 bean1 = new Bean1();
         bean1.setName("hjb");
-        bean1.setBean2(new ArrayList());
+        bean1.setBean2(new ArrayList<Bean2>());
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
@@ -174,16 +174,16 @@ public class BeanListTest {
             fromBytes.fromBytes(bytes, ExcepBean.class, 0);
             fail();
         }
-        catch (RuntimeException e) {
+        catch (Exception e) {
             assertEquals("Unkown List Item Class for field list", e.getMessage());
         }
     }
-
     public static class ExcepBean {
 
         private String name;
+        
         @JCVarLen(1)
-        private List list;
+        private List<?> list;
 
         @Override
         public int hashCode() {
@@ -203,11 +203,11 @@ public class BeanListTest {
             return name;
         }
 
-        public void setList(List list) {
+        public void setList(List<?> list) {
             this.list = list;
         }
 
-        public List getList() {
+        public List<?> getList() {
             return list;
         }
     }

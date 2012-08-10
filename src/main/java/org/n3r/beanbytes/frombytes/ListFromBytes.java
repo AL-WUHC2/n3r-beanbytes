@@ -41,7 +41,7 @@ public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesA
 
     private Class<?> getItemClass() {
         Type genericType = (Type) getOption("FieldGenericType");
-        Class<?> itemClass = RField.getFieldGenericType(genericType);
+        Class<?> itemClass = RField.getActualTypeArgument(genericType);
         if (itemClass != Void.class) return itemClass;
 
         throw new RuntimeException("Unkown List Item Class for field " + getOption("FieldName"));
