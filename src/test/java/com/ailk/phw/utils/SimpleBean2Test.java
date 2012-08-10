@@ -14,7 +14,7 @@ import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.collection.RMaps;
+import org.n3r.core.collection.RMap;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RHex;
 
@@ -92,7 +92,7 @@ public class SimpleBean2Test {
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
-        beanToBytes.addOptions(RMaps.of("charsetName", (Object) "UTF-16LE"));
+        beanToBytes.addOptions(RMap.of("charsetName", (Object) "UTF-16LE"));
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = beanToBytes.toBytes("吴昊成", printer);
@@ -104,7 +104,7 @@ public class SimpleBean2Test {
         assertEquals(RHex.encode(expected), printer.toString());
 
         FromBytesAware<String> beanFromBytes = new BeanFromBytes<String>();
-        beanFromBytes.addOptions(RMaps.of("charsetName", (Object) "UTF-16LE"));
+        beanFromBytes.addOptions(RMap.of("charsetName", (Object) "UTF-16LE"));
         String str = beanFromBytes.fromBytes(bytes, String.class, 0).getBean();
 
         assertEquals("吴昊成", str);
