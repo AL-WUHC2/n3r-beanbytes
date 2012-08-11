@@ -1,9 +1,7 @@
 package com.ailk.phw.utils;
 
-import static org.junit.Assert.*;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
@@ -12,6 +10,8 @@ import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RByte;
+
+import static org.junit.Assert.*;
 
 public class SimpleBean1Test {
 

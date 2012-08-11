@@ -1,13 +1,14 @@
 package org.n3r.beanbytes.converter;
 
-import static org.n3r.core.lang.RByte.*;
-
-import org.apache.commons.lang.StringUtils;
 import org.n3r.beanbytes.TypeConverter;
 import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.impl.ByteBean;
+
+import static org.n3r.core.lang.RByte.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @JCApplyTo(value = String.class, linked = JCFixLen.class)
 public class JCStringFixLenConverter extends TypeConverter {
@@ -31,7 +32,7 @@ public class JCStringFixLenConverter extends TypeConverter {
     }
 
     private byte getPadChar(JCFixLen jcLen) {
-        return !StringUtils.isEmpty(jcLen.pad()) ? parseBytes(jcLen.pad())[0] : getDefaultPadByte();
+        return !isEmpty(jcLen.pad()) ? parseBytes(jcLen.pad())[0] : getDefaultPadByte();
     }
 
     private byte getDefaultPadByte() {
