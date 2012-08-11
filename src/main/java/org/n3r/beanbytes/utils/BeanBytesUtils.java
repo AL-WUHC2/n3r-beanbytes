@@ -1,9 +1,7 @@
 package org.n3r.beanbytes.utils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Set;
 
 import org.joor.Reflect;
 import org.n3r.beanbytes.BytesAware;
@@ -13,7 +11,6 @@ import org.n3r.beanbytes.annotations.JCOption;
 import org.n3r.beanbytes.annotations.JCOptions;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RClass;
-import org.reflections.Reflections;
 
 import com.google.common.collect.Maps;
 
@@ -32,12 +29,9 @@ public class BeanBytesUtils {
     public static void parseBeanBytes(Field field, BytesAware<Object> registeredToBytes) {
         registeredToBytes.addOptions(parseOptions(field));
 
-        Reflections reflections = new Reflections("org.n3r");
         Class<?> converterClass = null;
-        Set<Class<?>> registeredClasses = reflections.getTypesAnnotatedWith(JCApplyTo.class);
-        for (Class<?> class1 : registeredClasses) {
+        for (Class<?> class1 : BeanBytesClassesScanner.getJCApplyToClasses()) {
             JCApplyTo applyTo = class1.getAnnotation(JCApplyTo.class);
-            if (applyTo.linked() == Annotation.class) continue;
             if (!field.isAnnotationPresent(applyTo.linked())) continue;
             if (!RClass.isAssignable(field.getType(), applyTo.value())) continue;
 

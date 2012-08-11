@@ -14,6 +14,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface JCPrint {
+    public static enum JCPrintType {
+        HEX, ASCII, Octet
+    }
+
     /**
      * 表示类型。
      */

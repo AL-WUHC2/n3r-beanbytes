@@ -7,16 +7,20 @@ import org.apache.commons.lang.ClassUtils;
 import org.joor.Reflect;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
+import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCBindType;
 import org.reflections.Reflections;
 
 import com.google.common.collect.Maps;
 
-public class BeanBytesMapping {
+public class BeanBytesClassesScanner {
     private static Map<Class<?>, Class<?>> toBytesMapping = Maps.newHashMap();
     private static Map<Class<?>, Class<?>> fromBytesMapping = Maps.newHashMap();
+    private static Set<Class<?>> jcApplyToClasses;
     static {
         Reflections reflections = new Reflections("org.n3r");
+        jcApplyToClasses = reflections.getTypesAnnotatedWith(JCApplyTo.class);
+
         Set<Class<?>> registeredClasses = reflections.getTypesAnnotatedWith(JCBindType.class);
         for (Class<?> class1 : registeredClasses) {
             JCBindType toBytesRegister = class1.getAnnotation(JCBindType.class);
@@ -28,6 +32,10 @@ public class BeanBytesMapping {
                 fromBytesMapping.put(toBytesRegister.value(), class1);
             }
         }
+    }
+
+    public static Set<Class<?>> getJCApplyToClasses() {
+        return jcApplyToClasses;
     }
 
     public static <T> ToBytesAware<T> getRegisteredToBytes(Class<?> clazz) {

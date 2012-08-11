@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 public @interface JCApplyTo {
 
     Class<?>[] value();
-    
-    Class<? extends Annotation> linked() default Annotation.class;
+
+    Class<? extends Annotation> linked();
 }

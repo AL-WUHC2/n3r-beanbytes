@@ -1,5 +1,7 @@
 package com.ailk.phw.utils;
 
+import static org.junit.Assert.*;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.junit.Test;
@@ -11,57 +13,18 @@ import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RByte;
 
-import static org.junit.Assert.*;
-
 public class SimpleBean1Test {
-    public static class SimpleBean1 {
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        private String name;
-        private int age;
-        @JCTransient
-        private String address;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-    }
 
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
+        beanToBytes.addOption("charsetName", "UTF-16LE");
+        beanToBytes.setConverter(null);
         byte[] bytes = beanToBytes.toBytes("123", null);
-        assertArrayEquals(BeanBytesUtils.prependLen(RByte.toBytes("123"), 1), bytes);
+        assertArrayEquals(BeanBytesUtils.prependLen(RByte.toBytes("123", "UTF-16LE"), 1), bytes);
 
         FromBytesAware<String> beanFromBytes = new BeanFromBytes<String>();
+        beanFromBytes.addOption("charsetName", "UTF-16LE");
         String str = beanFromBytes.fromBytes(bytes, String.class, 0).getBean();
         assertEquals("123", str);
 
@@ -93,5 +56,46 @@ public class SimpleBean1Test {
         SimpleBean1 bean = beanFromBytes.fromBytes(bytes, SimpleBean1.class, 0).getBean();
 
         assertEquals(simpleBean, bean);
+    }
+
+    public static class SimpleBean1 {
+        private String name;
+        private int age;
+        @JCTransient
+        private String address;
+
+        @Override
+        public int hashCode() {
+            return HashCodeBuilder.reflectionHashCode(this);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return EqualsBuilder.reflectionEquals(this, obj);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getAddress() {
+            return address;
+        }
     }
 }

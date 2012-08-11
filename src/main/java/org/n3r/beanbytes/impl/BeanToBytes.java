@@ -6,7 +6,7 @@ import org.joor.Reflect;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCTransient;
-import org.n3r.beanbytes.utils.BeanBytesMapping;
+import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RField;
@@ -18,7 +18,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     @Override
     public byte[] toBytes(T bean, StringBuilder printer) {
         // 检查是否针对该类型已有转换器
-        ToBytesAware<T> registeredToBytes = BeanBytesMapping.getRegisteredToBytes(bean.getClass());
+        ToBytesAware<T> registeredToBytes = BeanBytesClassesScanner.getRegisteredToBytes(bean.getClass());
         if (registeredToBytes != null) {
             registeredToBytes.addOptions(options);
             return registeredToBytes.toBytes(bean, printer);
@@ -54,7 +54,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
         if (fieldValue == null && nullable) return;
         if (fieldValue == null) throw new RuntimeException("Field " + field.getName() + " is not allowed null.");
 
-        ToBytesAware<Object> registeredToBytes = BeanBytesMapping.getRegisteredToBytes(field.getType());
+        ToBytesAware<Object> registeredToBytes = BeanBytesClassesScanner.getRegisteredToBytes(field.getType());
         if (registeredToBytes == null) {
             byte[] result = new BeanToBytes<Object>().toBytes(fieldValue, printer);
             bytes = RByte.add(bytes, result);

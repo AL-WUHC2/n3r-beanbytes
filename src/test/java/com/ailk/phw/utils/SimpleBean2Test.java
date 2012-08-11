@@ -1,5 +1,7 @@
 package com.ailk.phw.utils;
 
+import static org.junit.Assert.*;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.junit.Test;
@@ -9,7 +11,7 @@ import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCOption;
 import org.n3r.beanbytes.annotations.JCOptions;
 import org.n3r.beanbytes.annotations.JCPrint;
-import org.n3r.beanbytes.annotations.JCPrintType;
+import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
@@ -18,77 +20,8 @@ import org.n3r.core.collection.RMap;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RHex;
 
-import static org.junit.Assert.*;
-
 public class SimpleBean2Test {
-    public static class SimpleBean2 {
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        @JCOptions(@JCOption(name = "charsetName", value = "UTF-16LE"))
-        @JCPrint(JCPrintType.Octet)
-        @JCFixLen(10)
-        private String name;
-        private int age;
-        @JCPrint(JCPrintType.ASCII)
-        private String ascii;
-        @JCOption(name = "charsetName", value = "UTF-16LE")
-        @JCPrint(JCPrintType.HEX)
-        @JCVarLen(2)
-        private String address;
-
-        @JCPrint(JCPrintType.ASCII)
-        @JCFixLen(10)
-        private String number;
-
-        public String getAddress() {
-            return address;
-        }
-
-        public void setAddress(String address) {
-            this.address = address;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        public String getAscii() {
-            return ascii;
-        }
-
-        public void setAscii(String ascii) {
-            this.ascii = ascii;
-        }
-
-        public void setNumber(String number) {
-            this.number = number;
-        }
-
-        public String getNumber() {
-            return number;
-        }
-    }
-
+ 
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
@@ -138,4 +71,73 @@ public class SimpleBean2Test {
         SimpleBean2 simpleBean2 = beanFromBytes2.fromBytes(bytes, SimpleBean2.class, 0).getBean();
         assertEquals(simpleBean, simpleBean2);
     }
+    
+    
+    public static class SimpleBean2 {
+        @JCOptions(@JCOption(name = "charsetName", value = "UTF-16LE"))
+        @JCPrint(JCPrintType.Octet)
+        @JCFixLen(10)
+        private String name;
+        private int age;
+        @JCPrint(JCPrintType.ASCII)
+        private String ascii;
+        @JCOption(name = "charsetName", value = "UTF-16LE")
+        @JCPrint(JCPrintType.HEX)
+        @JCVarLen(2)
+        private String address;
+
+        @JCPrint(JCPrintType.ASCII)
+        @JCFixLen(value = 10, pad = "FF")
+        private String number;
+
+        @Override
+        public int hashCode() {
+            return HashCodeBuilder.reflectionHashCode(this);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return EqualsBuilder.reflectionEquals(this, obj);
+        }
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+
+        public String getAscii() {
+            return ascii;
+        }
+
+        public void setAscii(String ascii) {
+            this.ascii = ascii;
+        }
+
+        public void setNumber(String number) {
+            this.number = number;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+    }
+
 }

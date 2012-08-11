@@ -6,7 +6,7 @@ import org.joor.Reflect;
 import org.n3r.beanbytes.FromByteBean;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.annotations.JCTransient;
-import org.n3r.beanbytes.utils.BeanBytesMapping;
+import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RField;
 
@@ -19,7 +19,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
     public FromByteBean<T> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         this.offset = offset;
         // 检查是否针对该类型已有转换器
-        FromBytesAware<T> registeredFromBytes = BeanBytesMapping.getRegisteredFromBytes(clazz);
+        FromBytesAware<T> registeredFromBytes = BeanBytesClassesScanner.getRegisteredFromBytes(clazz);
         if (registeredFromBytes != null) {
             registeredFromBytes.addOptions(options);
             FromByteBean<T> result = registeredFromBytes.fromBytes(bytes, clazz, offset);
@@ -45,7 +45,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
     private Object parseFieldValue(byte[] bytes, Field field) {
         if (offset >= bytes.length) return null;
 
-        FromBytesAware<Object> registeredFromBytes = BeanBytesMapping.getRegisteredFromBytes(field.getType());
+        FromBytesAware<Object> registeredFromBytes = BeanBytesClassesScanner.getRegisteredFromBytes(field.getType());
         if (registeredFromBytes == null) {
             registeredFromBytes = new BeanFromBytes<Object>();
         }
