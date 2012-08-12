@@ -7,7 +7,7 @@ import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.lang.RByte;
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -77,8 +77,8 @@ public class Bean1Test {
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
-        byte[] expected = BeanBytesUtils.prependLen(RByte.toBytes("hjb"), 1);
-        expected = RByte.add(expected, RByte.toBytes(32));
+        byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
+        expected = add(expected, toBytes(32));
 
         assertArrayEquals(expected, bytes);
         assertEquals("{name:03686A62, bean2:{age:32}}", printer.toString());

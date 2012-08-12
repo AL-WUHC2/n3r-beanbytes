@@ -15,8 +15,9 @@ import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.collection.RMap;
-import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RHex;
+
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -30,7 +31,7 @@ public class SimpleBean2Test {
         StringBuilder printer = new StringBuilder();
         byte[] bytes = beanToBytes.toBytes("吴昊成", printer);
 
-        byte[] expected = RByte.toBytes("吴昊成", "UTF-16LE");
+        byte[] expected = toBytes("吴昊成", "UTF-16LE");
         expected = BeanBytesUtils.prependLen(expected, 1);
 
         assertArrayEquals(expected, bytes);
@@ -55,12 +56,12 @@ public class SimpleBean2Test {
         ToBytesAware<SimpleBean2> beanToBytes = new BeanToBytes<SimpleBean2>();
         StringBuilder printer = new StringBuilder();
         byte[] bytes = beanToBytes.toBytes(simpleBean, printer);
-        byte[] nameBytes = RByte.add(RByte.toBytes("吴昊成", "UTF-16LE"), RByte.repeat((byte) 0x00, 4));
-        byte[] expected = RByte.add(nameBytes, RByte.toBytes(24));
-        expected = RByte.add(expected, RByte.parseBytes("07"), RByte.toBytes("ABCDEFG"));
-        byte[] addrBytes = RByte.add(RByte.parseBytes("0004"), RByte.toBytes("nj", "UTF-16LE"));
-        expected = RByte.add(expected, addrBytes);
-        expected = RByte.add(expected, RByte.toBytes("1234567"), RByte.repeat((byte) 0xff, 3));
+        byte[] nameBytes = add(toBytes("吴昊成", "UTF-16LE"), repeat((byte) 0x00, 4));
+        byte[] expected = add(nameBytes, toBytes(24));
+        expected = add(expected, parseBytes("07"), toBytes("ABCDEFG"));
+        byte[] addrBytes = add(parseBytes("0004"), toBytes("nj", "UTF-16LE"));
+        expected = add(expected, addrBytes);
+        expected = add(expected, toBytes("1234567"), repeat((byte) 0xff, 3));
 
         assertArrayEquals(expected, bytes);
 

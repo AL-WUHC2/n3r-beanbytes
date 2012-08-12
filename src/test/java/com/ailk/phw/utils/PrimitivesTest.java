@@ -7,7 +7,7 @@ import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import org.n3r.core.lang.RByte;
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ public class PrimitivesTest {
         StringBuilder printer = new StringBuilder();
         byte[] bytes = beanToBytes1.toBytes(bool, printer);
         assertEquals("false", printer.toString());
-        byte[] expected = RByte.toBytes(bool);
+        byte[] expected = toBytes(bool);
         assertArrayEquals(expected, bytes);
         assertEquals(bool, beanFromBytes1.fromBytes(bytes, Boolean.class, 0).getBean());
         printer.delete(0, printer.length());
@@ -31,7 +31,7 @@ public class PrimitivesTest {
         FromBytesAware<Byte> beanFromBytes2 = new BeanFromBytes<Byte>();
         bytes = beanToBytes2.toBytes(bt, printer);
         assertEquals("" + bt, printer.toString());
-        expected = RByte.toBytes(bt);
+        expected = toBytes(bt);
         assertArrayEquals(expected, bytes);
         assertEquals(bt, beanFromBytes2.fromBytes(bytes, Byte.class, 0).getBean().byteValue());
         printer.delete(0, printer.length());
@@ -41,7 +41,7 @@ public class PrimitivesTest {
         FromBytesAware<Integer> beanFromBytes3 = new BeanFromBytes<Integer>();
         bytes = beanToBytes3.toBytes(i, printer);
         assertEquals("" + i, printer.toString());
-        expected = RByte.toBytes(i);
+        expected = toBytes(i);
         assertArrayEquals(expected, bytes);
         assertEquals(i, beanFromBytes3.fromBytes(bytes, Integer.class, 0).getBean().intValue());
         printer.delete(0, printer.length());
@@ -51,7 +51,7 @@ public class PrimitivesTest {
         FromBytesAware<Long> beanFromBytes4 = new BeanFromBytes<Long>();
         bytes = beanToBytes4.toBytes(l, printer);
         assertEquals("" + l, printer.toString());
-        expected = RByte.toBytes(l);
+        expected = toBytes(l);
         assertArrayEquals(expected, bytes);
         assertEquals(l, beanFromBytes4.fromBytes(beanToBytes4.toBytes(l, null), Long.class, 0).getBean().longValue());
         printer.delete(0, printer.length());
@@ -61,7 +61,7 @@ public class PrimitivesTest {
         FromBytesAware<Short> beanFromBytes5 = new BeanFromBytes<Short>();
         bytes = beanToBytes5.toBytes(s, printer);
         assertEquals("" + s, printer.toString());
-        expected = RByte.toBytes(s);
+        expected = toBytes(s);
         assertArrayEquals(expected, bytes);
         assertEquals(s, beanFromBytes5.fromBytes(beanToBytes5.toBytes(s, null), Short.class, 0).getBean().shortValue());
 
@@ -78,8 +78,8 @@ public class PrimitivesTest {
         BeanToBytes<PrimitiveBean> toBytes = new BeanToBytes<PrimitiveBean>();
         StringBuilder printer = new StringBuilder();
         byte[] bytes = toBytes.toBytes(bean, printer);
-        byte[] expecteds = RByte.add(RByte.toBytes(false), RByte.toBytes((byte) 0x01), RByte.toBytes(12));
-        expecteds = RByte.add(expecteds, RByte.toBytes(23L), RByte.toBytes((short) 34));
+        byte[] expecteds = add(toBytes(false), toBytes((byte) 0x01), toBytes(12));
+        expecteds = add(expecteds, toBytes(23L), toBytes((short) 34));
         assertArrayEquals(expecteds, bytes);
         assertEquals("{bool:false, bt:1, i:12, l:23, s:34}", printer.toString());
 

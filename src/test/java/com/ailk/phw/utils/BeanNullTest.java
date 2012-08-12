@@ -8,7 +8,7 @@ import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.lang.RByte;
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -65,7 +65,7 @@ public class BeanNullTest {
         ToBytesAware<NullBean> toBytes1 = new BeanToBytes<NullBean>();
         FromBytesAware<NullBean> fromBytes1 = new BeanFromBytes<NullBean>();
         byte[] bytes = toBytes1.toBytes(nullBean1, null);
-        byte[] expected = RByte.add(RByte.toBytes(12), BeanBytesUtils.prependLen(RByte.toBytes(middleStr), 1));
+        byte[] expected = add(toBytes(12), BeanBytesUtils.prependLen(toBytes(middleStr), 1));
         assertArrayEquals(expected, bytes);
         NullBean nullBean2 = fromBytes1.fromBytes(bytes, NullBean.class, 0).getBean();
         assertEquals(nullBean1, nullBean2);

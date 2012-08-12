@@ -13,7 +13,7 @@ import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.lang.RByte;
+import static org.n3r.core.lang.RByte.*;
 
 import com.google.common.collect.Lists;
 
@@ -86,8 +86,8 @@ public class BeanListTest {
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
-        byte[] expected = BeanBytesUtils.prependLen(RByte.toBytes("hjb"), 1);
-        expected = RByte.add(expected, BeanBytesUtils.prependLen(RByte.toBytes(32), 1, 1));
+        byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
+        expected = add(expected, BeanBytesUtils.prependLen(toBytes(32), 1, 1));
 
         assertArrayEquals(expected, bytes);
         assertEquals("{name:03686A62, bean2:[{age:32}]}", printer.toString());
@@ -106,7 +106,7 @@ public class BeanListTest {
         ToBytesAware<Bean1> toBytes1 = new BeanToBytes<Bean1>();
         FromBytesAware<Bean1> fromBytes1 = new BeanFromBytes<Bean1>();
         byte[] bytes = toBytes1.toBytes(bean1, null);
-        byte[] expected = BeanBytesUtils.prependLen(RByte.toBytes("hjb"), 1);
+        byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
         assertArrayEquals(expected, bytes);
         Bean1 bean2 = fromBytes1.fromBytes(bytes, Bean1.class, 0).getBean();
         assertEquals(bean1, bean2);
@@ -120,8 +120,8 @@ public class BeanListTest {
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
-        byte[] expected = BeanBytesUtils.prependLen(RByte.toBytes("hjb"), 1);
-        expected = RByte.add(expected, RByte.toBytes((byte) 0));
+        byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
+        expected = add(expected, toBytes((byte) 0));
 
         assertArrayEquals(expected, bytes);
         assertEquals("{name:03686A62, bean2:[]}", printer.toString());
@@ -145,12 +145,12 @@ public class BeanListTest {
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
-        byte[] expected = BeanBytesUtils.prependLen(RByte.toBytes("hjb"), 1);
+        byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
 
-        expected = RByte.add(expected, RByte.toBytes((byte) 3));
-        expected = RByte.add(expected, RByte.toBytes(32));
-        expected = RByte.add(expected, RByte.toBytes(45));
-        expected = RByte.add(expected, RByte.toBytes(68));
+        expected = add(expected, toBytes((byte) 3));
+        expected = add(expected, toBytes(32));
+        expected = add(expected, toBytes(45));
+        expected = add(expected, toBytes(68));
 
         assertArrayEquals(expected, bytes);
         assertEquals("{name:03686A62, bean2:[{age:32}, {age:45}, {age:68}]}", printer.toString());

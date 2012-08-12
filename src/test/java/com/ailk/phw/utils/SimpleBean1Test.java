@@ -8,8 +8,8 @@ import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.lang.RByte;
+import static org.n3r.beanbytes.utils.BeanBytesUtils.*;
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -21,7 +21,7 @@ public class SimpleBean1Test {
         beanToBytes.addOption("charsetName", "UTF-16LE");
         beanToBytes.setConverter(null);
         byte[] bytes = beanToBytes.toBytes("123", null);
-        assertArrayEquals(BeanBytesUtils.prependLen(RByte.toBytes("123", "UTF-16LE"), 1), bytes);
+        assertArrayEquals(prependLen(toBytes("123", "UTF-16LE"), 1), bytes);
 
         FromBytesAware<String> beanFromBytes = new BeanFromBytes<String>();
         beanFromBytes.addOption("charsetName", "UTF-16LE");
@@ -30,7 +30,7 @@ public class SimpleBean1Test {
 
         ToBytesAware<Integer> beanToBytes2 = new BeanToBytes<Integer>();
         bytes = beanToBytes2.toBytes(123, null);
-        byte[] expected = RByte.toBytes(123);
+        byte[] expected = toBytes(123);
         assertArrayEquals(expected, bytes);
 
         FromBytesAware<Integer> beanFromBytes2 = new BeanFromBytes<Integer>();
@@ -47,10 +47,10 @@ public class SimpleBean1Test {
         ToBytesAware<SimpleBean1> beanToBytes = new BeanToBytes<SimpleBean1>();
         byte[] bytes = beanToBytes.toBytes(simpleBean, null);
 
-        byte[] expected = RByte.toBytes("wuhaocheng");
-        expected = BeanBytesUtils.prependLen(expected, 1);
+        byte[] expected = toBytes("wuhaocheng");
+        expected = prependLen(expected, 1);
 
-        assertArrayEquals(RByte.add(expected, RByte.toBytes(24)), bytes);
+        assertArrayEquals(add(expected, toBytes(24)), bytes);
 
         FromBytesAware<SimpleBean1> beanFromBytes = new BeanFromBytes<SimpleBean1>();
         SimpleBean1 bean = beanFromBytes.fromBytes(bytes, SimpleBean1.class, 0).getBean();

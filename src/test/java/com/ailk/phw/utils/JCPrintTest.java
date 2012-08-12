@@ -7,7 +7,7 @@ import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import org.n3r.core.lang.RByte;
+import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
@@ -21,9 +21,9 @@ public class JCPrintTest {
         bean.setEmail("bjh@qq.com");
         StringBuilder printer = new StringBuilder();
         byte[] bytes = toBytes.toBytes(bean, printer);
-        byte[] expected = RByte.padTail(RByte.toBytes("hjb"), 10);
-        expected = RByte.add(expected, RByte.padTail(RByte.toBytes("nj"), 10, (byte) 0x00));
-        expected = RByte.add(expected, RByte.padTail(RByte.toBytes("bjh@qq.com"), 20, (byte) 0xFF));
+        byte[] expected = padTail(toBytes("hjb"), 10);
+        expected = add(expected, padTail(toBytes("nj"), 10, (byte) 0x00));
+        expected = add(expected, padTail(toBytes("bjh@qq.com"), 20, (byte) 0xFF));
 
         assertArrayEquals(expected, bytes);
 
