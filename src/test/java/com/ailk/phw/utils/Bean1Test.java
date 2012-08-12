@@ -1,52 +1,20 @@
 package com.ailk.phw.utils;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import static org.n3r.core.lang.RByte.*;
+import org.n3r.core.lang.RBaseBean;
+
+import com.ailk.phw.utils.beans.Bean2;
 
 import static org.junit.Assert.*;
 
+import static org.n3r.core.lang.RByte.*;
+
 public class Bean1Test {
-    public static class Bean2 {
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        private int age;
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-    }
-
-    public static class Bean1 {
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
+    public static class Bean1 extends RBaseBean {
         private String name;
         private Bean2 bean2;
 

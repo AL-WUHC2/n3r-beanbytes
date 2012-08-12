@@ -1,15 +1,16 @@
 package com.ailk.phw.utils;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import static org.n3r.core.lang.RByte.*;
+import org.n3r.core.lang.RBaseBean;
+
 
 import static org.junit.Assert.*;
+
+import static org.n3r.core.lang.RByte.*;
 
 public class PrimitivesTest {
 
@@ -88,17 +89,7 @@ public class PrimitivesTest {
 
     }
 
-    public static class PrimitiveBean {
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
+    public static class PrimitiveBean extends RBaseBean {
         private boolean bool;
         private byte bt;
         private int i;

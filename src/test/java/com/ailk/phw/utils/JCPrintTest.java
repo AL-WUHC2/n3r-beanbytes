@@ -1,15 +1,16 @@
 package com.ailk.phw.utils;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import static org.n3r.core.lang.RByte.*;
+import org.n3r.core.lang.RBaseBean;
+
 
 import static org.junit.Assert.*;
+
+import static org.n3r.core.lang.RByte.*;
 
 public class JCPrintTest {
     @Test
@@ -30,7 +31,7 @@ public class JCPrintTest {
         assertSame(JCPrintType.ASCII, JCPrintType.valueOf("ASCII"));
     }
 
-    public static class JCPrintBean {
+    public static class JCPrintBean extends RBaseBean {
         @JCFixLen(value = 10)
         private String name;
         @JCFixLen(value = 10, pad = "00")
@@ -45,16 +46,6 @@ public class JCPrintTest {
 
         public void setEmail(String email) {
             this.email = email;
-        }
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
         }
 
         public String getName() {

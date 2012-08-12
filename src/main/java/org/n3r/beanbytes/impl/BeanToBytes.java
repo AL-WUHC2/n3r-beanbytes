@@ -2,6 +2,7 @@ package org.n3r.beanbytes.impl;
 
 import java.lang.reflect.Field;
 
+import static org.apache.commons.lang3.Validate.*;
 import org.joor.Reflect;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCPrint;
@@ -52,7 +53,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
 
         Object fieldValue = Reflect.on(bean).get(field.getName());
         if (fieldValue == null && nullable) return;
-        if (fieldValue == null) throw new RuntimeException("Field " + field.getName() + " is not allowed null.");
+        notNull(fieldValue, "Field %s is not allowed null.", field.getName());
 
         ToBytesAware<Object> registeredToBytes = BeanBytesClassesScanner.getRegisteredToBytes(field.getType());
         if (registeredToBytes == null) {

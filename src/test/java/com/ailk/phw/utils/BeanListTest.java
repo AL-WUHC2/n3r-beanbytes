@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
@@ -13,48 +11,17 @@ import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import static org.n3r.core.lang.RByte.*;
+import org.n3r.core.lang.RBaseBean;
 
+import com.ailk.phw.utils.beans.Bean2;
 import com.google.common.collect.Lists;
 
 import static org.junit.Assert.*;
 
+import static org.n3r.core.lang.RByte.*;
+
 public class BeanListTest {
-    public static class Bean2 {
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
-        private int age;
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-    }
-
-    public static class Bean1 {
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
-
+    public static class Bean1 extends RBaseBean {
         private String name;
         @JCVarLen(1)
         private List<Bean2> bean2;
@@ -178,22 +145,13 @@ public class BeanListTest {
             assertEquals("Unkown List Item Class for field list", e.getMessage());
         }
     }
-    public static class ExcepBean {
+
+    public static class ExcepBean extends RBaseBean {
 
         private String name;
-        
+
         @JCVarLen(1)
         private List<?> list;
-
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
 
         public void setName(String name) {
             this.name = name;

@@ -1,7 +1,5 @@
 package com.ailk.phw.utils;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
@@ -15,14 +13,15 @@ import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.collection.RMap;
+import org.n3r.core.lang.RBaseBean;
 import org.n3r.core.lang.RHex;
-
-import static org.n3r.core.lang.RByte.*;
 
 import static org.junit.Assert.*;
 
+import static org.n3r.core.lang.RByte.*;
+
 public class SimpleBean2Test {
- 
+
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
@@ -72,9 +71,8 @@ public class SimpleBean2Test {
         SimpleBean2 simpleBean2 = beanFromBytes2.fromBytes(bytes, SimpleBean2.class, 0).getBean();
         assertEquals(simpleBean, simpleBean2);
     }
-    
-    
-    public static class SimpleBean2 {
+
+    public static class SimpleBean2 extends RBaseBean {
         @JCOptions(@JCOption(name = "charsetName", value = "UTF-16LE"))
         @JCPrint(JCPrintType.Octet)
         @JCFixLen(10)
@@ -91,15 +89,6 @@ public class SimpleBean2Test {
         @JCFixLen(value = 10, pad = "FF")
         private String number;
 
-        @Override
-        public int hashCode() {
-            return HashCodeBuilder.reflectionHashCode(this);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return EqualsBuilder.reflectionEquals(this, obj);
-        }
         public String getAddress() {
             return address;
         }
