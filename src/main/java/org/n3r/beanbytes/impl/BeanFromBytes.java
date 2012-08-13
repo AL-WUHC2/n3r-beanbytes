@@ -40,7 +40,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
     }
 
     private Object parseFieldValue(byte[] bytes, Field field) {
-        if (offset >= bytes.length) return null;
+        if (offset + bytesSize >= bytes.length) return null;
 
         FromBytesAware<Object> registeredFromBytes = BeanBytesClassesScanner.getBindFromBytes(field.getType());
         if (registeredFromBytes == null) {
@@ -52,9 +52,9 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
             registeredFromBytes.addOption("FieldName", field.getName());
         }
 
-        FromByteBean<Object> result = registeredFromBytes.fromBytes(bytes, field.getType(), offset);
-        offset += result.getBytesSize();
+        FromByteBean<Object> result = registeredFromBytes.fromBytes(bytes, field.getType(), offset + bytesSize);
         bytesSize += result.getBytesSize();
+
         return result.getBean();
     }
 

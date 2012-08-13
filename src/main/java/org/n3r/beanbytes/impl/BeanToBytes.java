@@ -30,14 +30,14 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
         // 当做JAVA BEAN处理，遍历fields
         bytes = new byte[0];
         Field lastField = null;
-        if (printer != null) printer.append('{');
+        RStr.append(printer, '{');
         for (Field field : bean.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(JCTransient.class)) continue;
             if (RField.isNotNormal(field)) continue;
 
             if (lastField != null) {
                 processField(lastField, bean, printer, false);
-                if (printer != null) printer.append(", ");
+                RStr.append(printer, ", ");
             }
 
             lastField = field;
@@ -45,7 +45,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
 
         // 最后一个字段，允许值为空
         if (lastField != null) processField(lastField, bean, printer, true);
-        if (printer != null) printer.append('}');
+        RStr.append(printer, '}');
 
         return bytes;
     }
@@ -72,6 +72,5 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
 
         bytes = RByte.add(bytes, result);
     }
-
 
 }
