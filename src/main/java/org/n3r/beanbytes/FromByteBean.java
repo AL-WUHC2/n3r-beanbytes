@@ -6,16 +6,13 @@ public class FromByteBean<T> {
 
     private int bytesSize;
 
-    public void setBean(T bean) {
+    public FromByteBean(T bean, int bytesSize) {
         this.bean = bean;
+        this.bytesSize = bytesSize;
     }
 
     public T getBean() {
         return bean;
-    }
-
-    public void setBytesSize(int bytesSize) {
-        this.bytesSize = bytesSize;
     }
 
     public int getBytesSize() {

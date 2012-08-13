@@ -10,10 +10,7 @@ public class ByteFromBytes extends BaseBytes<Byte> implements FromBytesAware<Byt
 
     @Override
     public FromByteBean<Byte> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<Byte> result = new FromByteBean<Byte>();
-        result.setBean(bytes[offset]);
-        result.setBytesSize(1);
-        return result;
+        return new FromByteBean<Byte>(bytes[offset], 1);
     }
 
 }

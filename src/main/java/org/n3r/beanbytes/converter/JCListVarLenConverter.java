@@ -11,14 +11,13 @@ import org.n3r.beanbytes.impl.ByteBean;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 
 @JCApplyTo(value=List.class, linked=JCVarLen.class)
-public class JCListVarLenConverter extends TypeConverter {
+public class JCListVarLenConverter extends TypeConverter<List<?>> {
 
     @Override
-    public byte[] encode(byte[] bytes, Object value) {
-        List<?> list = (List<?>) value;
+    public byte[] encode(byte[] bytes, List<?> value) {
         JCVarLen jcLen = field.getAnnotation(JCVarLen.class);
 
-        return BeanBytesUtils.prependLen(bytes, jcLen.value(), list.size());
+        return BeanBytesUtils.prependLen(bytes, jcLen.value(), value.size());
     }
 
     @Override

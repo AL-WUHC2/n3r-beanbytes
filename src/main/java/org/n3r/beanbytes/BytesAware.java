@@ -19,6 +19,6 @@ public interface BytesAware<T> {
      * 例如填充指定长度的转换器等。
      * @param converter
      */
-    void setConverter(BytesConverterAware converter);
+    void setConverter(BytesConverterAware<T> converter);
 
 }

@@ -8,10 +8,10 @@ import org.n3r.beanbytes.utils.BeanBytesUtils;
 import static org.n3r.core.lang.RByte.*;
 
 @JCApplyTo(value = String.class, linked = JCVarLen.class)
-public class JCStringVarLenConverter extends TypeConverter {
+public class JCStringVarLenConverter extends TypeConverter<String> {
 
     @Override
-    public byte[] encode(byte[] bytes, Object value) {
+    public byte[] encode(byte[] bytes, String value) {
         return BeanBytesUtils.prependLen(bytes, getLenBytesNum(), bytes.length);
     }
 

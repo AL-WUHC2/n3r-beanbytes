@@ -18,25 +18,21 @@ public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesA
 
     @Override
     public FromByteBean<List<Object>> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<List<Object>> ret = new FromByteBean<List<Object>>();
-        Class<?> itemClass = getItemClass();
-
+        int offset2 = offset;
         ByteBean byteBean = converter.decode(bytes, offset);
-        int len = byteBean.getProcessBytesNum();
-        offset += byteBean.getProcessBytesNum();
+        offset2 += byteBean.getProcessBytesNum();
 
         List<Object> result = Lists.newArrayList();
+
+        Class<?> itemClass = getItemClass();
         for (int i = 0; i < byteBean.getSize(); i++) {
             BeanFromBytes<?> beanFromBytes = new BeanFromBytes<Object>();
-            FromByteBean<?> item = beanFromBytes.fromBytes(bytes, itemClass, offset);
-            offset += item.getBytesSize();
+            FromByteBean<?> item = beanFromBytes.fromBytes(bytes, itemClass, offset2);
+            offset2 += item.getBytesSize();
             result.add(item.getBean());
-            len += item.getBytesSize();
         }
 
-        ret.setBean(result);
-        ret.setBytesSize(len);
-        return ret;
+        return new FromByteBean<List<Object>>(result, offset2 - offset);
     }
 
     private Class<?> getItemClass() {

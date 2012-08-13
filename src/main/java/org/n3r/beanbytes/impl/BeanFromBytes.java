@@ -19,7 +19,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
     public FromByteBean<T> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         this.offset = offset;
         // 检查是否针对该类型已有转换器
-        FromBytesAware<T> registeredFromBytes = BeanBytesClassesScanner.getRegisteredFromBytes(clazz);
+        FromBytesAware<T> registeredFromBytes = BeanBytesClassesScanner.getBindFromBytes(clazz);
         if (registeredFromBytes != null) {
             registeredFromBytes.addOptions(options);
             FromByteBean<T> result = registeredFromBytes.fromBytes(bytes, clazz, offset);
@@ -35,17 +35,14 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
             Object fieldValue = parseFieldValue(bytes, field);
             Reflect.on(obj).set(field.getName(), fieldValue);
         }
-        FromByteBean<T> result = new FromByteBean<T>();
-        result.setBean(obj);
-        result.setBytesSize(bytesSize);
 
-        return result;
+        return new FromByteBean<T>(obj, bytesSize);
     }
 
     private Object parseFieldValue(byte[] bytes, Field field) {
         if (offset >= bytes.length) return null;
 
-        FromBytesAware<Object> registeredFromBytes = BeanBytesClassesScanner.getRegisteredFromBytes(field.getType());
+        FromBytesAware<Object> registeredFromBytes = BeanBytesClassesScanner.getBindFromBytes(field.getType());
         if (registeredFromBytes == null) {
             registeredFromBytes = new BeanFromBytes<Object>();
         }

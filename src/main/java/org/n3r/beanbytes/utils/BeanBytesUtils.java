@@ -9,10 +9,11 @@ import org.n3r.beanbytes.BytesConverterAware;
 import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCOption;
 import org.n3r.beanbytes.annotations.JCOptions;
-import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RClass;
 
 import com.google.common.collect.Maps;
+
+import static org.n3r.core.lang.RByte.*;
 
 public class BeanBytesUtils {
     public static byte[] prependLen(byte[] src, int lenBytes) {
@@ -20,17 +21,17 @@ public class BeanBytesUtils {
     }
 
     public static byte[] prependLen(byte[] src, int lenBytes, int lenValue) {
-        byte[] lengthBytes = RByte.toBytes(lenValue);
-        byte[] bytes = RByte.subBytes(lengthBytes, lengthBytes.length - lenBytes);
+        byte[] lengthBytes = toBytes(lenValue);
+        byte[] bytes = subBytes(lengthBytes, lengthBytes.length - lenBytes);
 
-        return RByte.add(bytes, src);
+        return add(bytes, src);
     }
 
-    public static void parseBeanBytes(Field field, BytesAware<Object> registeredToBytes) {
-        registeredToBytes.addOptions(parseOptions(field));
+    public static void parseBeanBytes(Field field, BytesAware<Object> byteAware) {
+        byteAware.addOptions(parseOptions(field));
 
         Class<?> converterClass = null;
-        for (Class<?> class1 : BeanBytesClassesScanner.getJCApplyToClasses()) {
+        for (Class<?> class1 : BeanBytesClassesScanner.getApplyToClasses()) {
             JCApplyTo applyTo = class1.getAnnotation(JCApplyTo.class);
             if (!field.isAnnotationPresent(applyTo.linked())) continue;
             if (!RClass.isAssignable(field.getType(), applyTo.value())) continue;
@@ -40,9 +41,9 @@ public class BeanBytesUtils {
         }
 
         if (converterClass != null) {
-            BytesConverterAware converter = Reflect.on(converterClass).create().get();
+            BytesConverterAware<Object> converter = Reflect.on(converterClass).create().get();
             converter.setField(field);
-            registeredToBytes.setConverter(converter);
+            byteAware.setConverter(converter);
         }
     }
 

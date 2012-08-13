@@ -14,41 +14,40 @@ import static com.google.common.collect.Maps.*;
 import static org.apache.commons.lang3.ClassUtils.*;
 
 public class BeanBytesClassesScanner {
-    private static Map<Class<?>, Class<?>> toBytesMaps = newHashMap();
-    private static Map<Class<?>, Class<?>> toBeanMaps = newHashMap();
-    private static Set<Class<?>> jcApplyToClasses;
+    private static Map<Class<?>, Class<?>> toBytesMap = newHashMap();
+    private static Map<Class<?>, Class<?>> toBeanMap = newHashMap();
+    private static Set<Class<?>> applyToClasses;
     static {
         Reflections reflections = new Reflections("org.n3r");
-        jcApplyToClasses = reflections.getTypesAnnotatedWith(JCApplyTo.class);
+        applyToClasses = reflections.getTypesAnnotatedWith(JCApplyTo.class);
 
-        Set<Class<?>> bindTypes = reflections.getTypesAnnotatedWith(JCBindType.class);
-        for (Class<?> clz : bindTypes) {
+        for (Class<?> clz : reflections.getTypesAnnotatedWith(JCBindType.class)) {
             JCBindType bindType = clz.getAnnotation(JCBindType.class);
 
-            if (isAssignable(clz, ToBytesAware.class)) toBytesMaps.put(bindType.value(), clz);
-            if (isAssignable(clz, FromBytesAware.class)) toBeanMaps.put(bindType.value(), clz);
+            Class<?> byteClass = bindType.value();
+            if (isAssignable(clz, ToBytesAware.class)) toBytesMap.put(byteClass, clz);
+            if (isAssignable(clz, FromBytesAware.class)) toBeanMap.put(byteClass, clz);
         }
     }
 
-    public static Set<Class<?>> getJCApplyToClasses() {
-        return jcApplyToClasses;
+    public static Set<Class<?>> getApplyToClasses() {
+        return applyToClasses;
     }
 
-    public static <T> ToBytesAware<T> getRegisteredToBytes(Class<?> clazz) {
-        return getRegisteredClass(toBytesMaps, clazz);
+    public static <T> ToBytesAware<T> getBindToBytes(Class<?> clazz) {
+        return getBindClass(toBytesMap, clazz);
     }
 
-    public static <T> FromBytesAware<T> getRegisteredFromBytes(Class<?> clazz) {
-        return getRegisteredClass(toBeanMaps, clazz);
+    public static <T> FromBytesAware<T> getBindFromBytes(Class<?> clazz) {
+        return getBindClass(toBeanMap, clazz);
     }
 
-    public static <T> T getRegisteredClass(Map<Class<?>, Class<?>> mapping, Class<?> clazz) {
-        Class<?> class1 = mapping.get(clazz);
-        if (class1 == null && clazz.isPrimitive()) class1 = mapping.get(primitiveToWrapper(clazz));
+    public static <T> T getBindClass(Map<Class<?>, Class<?>> map, Class<?> target) {
+        Class<?> clz = map.get(target);
+        if (clz == null && target.isPrimitive()) clz = map.get(primitiveToWrapper(target));
+        if (clz == null) return null;
 
-        if (class1 == null) return null;
-
-        return Reflect.on(class1).create().get();
+        return Reflect.on(clz).create().get();
     }
 
 }

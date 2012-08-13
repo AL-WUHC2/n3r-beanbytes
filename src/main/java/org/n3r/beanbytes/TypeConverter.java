@@ -2,7 +2,7 @@ package org.n3r.beanbytes;
 
 import java.lang.reflect.Field;
 
-public abstract class TypeConverter implements BytesConverterAware {
+public abstract class TypeConverter<T> implements BytesConverterAware<T> {
 
     protected Field field;
 

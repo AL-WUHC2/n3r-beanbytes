@@ -11,9 +11,6 @@ public class LongFromBytes extends BaseBytes<Long> implements FromBytesAware<Lon
 
     @Override
     public FromByteBean<Long> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<Long> result = new FromByteBean<Long>();
-        result.setBean(RByte.toLong(bytes, offset));
-        result.setBytesSize(8);
-        return result;
+        return new FromByteBean<Long>(RByte.toLong(bytes, offset), 8);
     }
 }

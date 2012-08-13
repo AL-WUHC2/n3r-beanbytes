@@ -9,7 +9,7 @@ import com.google.common.collect.Maps;
 
 public abstract class BaseBytes<T> implements BytesAware<T> {
     protected Map<String, Object> options = Maps.newHashMap();
-    protected BytesConverterAware converter;
+    protected BytesConverterAware<T> converter;
 
     public void addOptions(Map<String, Object> options) {
         this.options.putAll(options);
@@ -19,7 +19,7 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         this.options.put(name, option);
     }
 
-    public void setConverter(BytesConverterAware converter) {
+    public void setConverter(BytesConverterAware<T> converter) {
         this.converter = converter;
     }
 

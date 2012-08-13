@@ -11,10 +11,7 @@ public class BooleanFromBytes extends BaseBytes<Boolean> implements FromBytesAwa
 
     @Override
     public FromByteBean<Boolean> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<Boolean> result = new FromByteBean<Boolean>();
-        result.setBean(RByte.toBoolean(RByte.subBytes(bytes, offset, 1)));
-        result.setBytesSize(1);
-        return result;
+        return new FromByteBean<Boolean>(RByte.toBoolean(RByte.subBytes(bytes, offset, 1)), 1);
     }
 
 }

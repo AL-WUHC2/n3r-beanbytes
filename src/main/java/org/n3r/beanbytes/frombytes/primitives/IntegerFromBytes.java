@@ -11,9 +11,6 @@ public class IntegerFromBytes extends BaseBytes<Integer> implements FromBytesAwa
 
     @Override
     public FromByteBean<Integer> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<Integer> result = new FromByteBean<Integer>();
-        result.setBean(RByte.toInt(bytes, offset));
-        result.setBytesSize(4);
-        return result;
+        return new FromByteBean<Integer>(RByte.toInt(bytes, offset), 4);
     }
 }

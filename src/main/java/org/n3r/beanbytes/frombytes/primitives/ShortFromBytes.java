@@ -11,10 +11,7 @@ public class ShortFromBytes extends BaseBytes<Short> implements FromBytesAware<S
 
     @Override
     public FromByteBean<Short> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
-        FromByteBean<Short> result = new FromByteBean<Short>();
-        result.setBean(RByte.toShort(bytes, offset));
-        result.setBytesSize(2);
-        return result;
+        return new FromByteBean<Short>(RByte.toShort(bytes, offset), 2);
     }
 
 }

@@ -5,8 +5,8 @@ import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.impl.BeanToBytes;
+import org.n3r.beanbytes.utils.PrintUtils;
 import org.n3r.core.lang.RBaseBean;
-
 
 import static org.junit.Assert.*;
 
@@ -15,6 +15,8 @@ import static org.n3r.core.lang.RByte.*;
 public class JCPrintTest {
     @Test
     public void test1() {
+        assertNotNull(new PrintUtils());
+
         BeanToBytes<JCPrintBean> toBytes = new BeanToBytes<JCPrintBean>();
         JCPrintBean bean = new JCPrintBean();
         bean.setName("hjb");
@@ -29,6 +31,9 @@ public class JCPrintTest {
         assertArrayEquals(expected, bytes);
 
         assertSame(JCPrintType.ASCII, JCPrintType.valueOf("ASCII"));
+
+        bytes = toBytes.toBytes(bean, null);
+        assertArrayEquals(expected, bytes);
     }
 
     public static class JCPrintBean extends RBaseBean {

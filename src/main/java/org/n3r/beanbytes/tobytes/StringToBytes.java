@@ -7,6 +7,7 @@ import org.n3r.beanbytes.converter.JCStringVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RHex;
+import org.n3r.core.lang.RStr;
 
 @JCBindType(String.class)
 public class StringToBytes extends BaseBytes<String> implements ToBytesAware<String> {
@@ -14,10 +15,11 @@ public class StringToBytes extends BaseBytes<String> implements ToBytesAware<Str
     public byte[] toBytes(String str, StringBuilder printer) {
         byte[] bytes = RByte.toBytes(str, "" + getOption("charsetName", "UTF-8"));
 
-        BytesConverterAware strConverter = converter != null ? converter : new JCStringVarLenConverter();
+        BytesConverterAware<String> strConverter = converter != null 
+                ? converter : new JCStringVarLenConverter();
         bytes = strConverter.encode(bytes, str);
 
-        if (printer != null) printer.append(RHex.encode(bytes));
+        RStr.append(printer, RHex.encode(bytes));
 
         return bytes;
     }

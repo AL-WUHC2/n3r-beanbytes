@@ -2,16 +2,18 @@ package org.n3r.beanbytes.impl;
 
 import java.lang.reflect.Field;
 
-import static org.apache.commons.lang3.Validate.*;
 import org.joor.Reflect;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
+import org.n3r.beanbytes.utils.PrintUtils;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RField;
-import org.n3r.core.lang.RHex;
+import org.n3r.core.lang.RStr;
+
+import static org.apache.commons.lang3.Validate.*;
 
 public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     private byte[] bytes = null;
@@ -19,7 +21,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     @Override
     public byte[] toBytes(T bean, StringBuilder printer) {
         // 检查是否针对该类型已有转换器
-        ToBytesAware<T> registeredToBytes = BeanBytesClassesScanner.getRegisteredToBytes(bean.getClass());
+        ToBytesAware<T> registeredToBytes = BeanBytesClassesScanner.getBindToBytes(bean.getClass());
         if (registeredToBytes != null) {
             registeredToBytes.addOptions(options);
             return registeredToBytes.toBytes(bean, printer);
@@ -49,13 +51,13 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     }
 
     private void processField(Field field, T bean, StringBuilder printer, boolean nullable) {
-        if (printer != null) printer.append(field.getName()).append(':');
+        RStr.append(printer, field.getName() + ':');
 
         Object fieldValue = Reflect.on(bean).get(field.getName());
         if (fieldValue == null && nullable) return;
         notNull(fieldValue, "Field %s is not allowed null.", field.getName());
 
-        ToBytesAware<Object> registeredToBytes = BeanBytesClassesScanner.getRegisteredToBytes(field.getType());
+        ToBytesAware<Object> registeredToBytes = BeanBytesClassesScanner.getBindToBytes(field.getType());
         if (registeredToBytes == null) {
             byte[] result = new BeanToBytes<Object>().toBytes(fieldValue, printer);
             bytes = RByte.add(bytes, result);
@@ -66,24 +68,10 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
 
         JCPrint jcPrint = field.getAnnotation(JCPrint.class);
         byte[] result = registeredToBytes.toBytes(fieldValue, jcPrint != null ? null : printer);
-        print(printer, result, fieldValue, field);
+        PrintUtils.print(printer, result, fieldValue, jcPrint);
 
         bytes = RByte.add(bytes, result);
     }
 
-    private void print(StringBuilder printer, byte[] result, Object fieldValue, Field field) {
-        JCPrint jcPrint = field.getAnnotation(JCPrint.class);
-        if (jcPrint == null) return;
-
-        switch (jcPrint.value()) {
-        case HEX:
-            printer.append(RHex.encode(result));
-            break;
-        case Octet:
-        case ASCII:
-            printer.append("" + fieldValue);
-            break;
-        }
-    }
 
 }
