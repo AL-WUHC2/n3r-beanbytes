@@ -6,6 +6,7 @@ import java.util.List;
 import org.n3r.beanbytes.FromByteBean;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.annotations.JCBindType;
+import org.n3r.beanbytes.converter.JCListVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.ByteBean;
@@ -19,7 +20,7 @@ public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesA
     @Override
     public FromByteBean<List<Object>> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         int offset2 = offset;
-        ByteBean byteBean = converter.decode(bytes, offset);
+        ByteBean byteBean = getConverter(new JCListVarLenConverter()).decode(bytes, offset);
         offset2 += byteBean.getProcessBytesNum();
 
         List<Object> result = Lists.newArrayList();

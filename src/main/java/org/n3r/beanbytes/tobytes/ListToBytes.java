@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCBindType;
+import org.n3r.beanbytes.converter.JCListVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.core.lang.RByte;
@@ -29,7 +30,7 @@ public class ListToBytes extends BaseBytes<List<Object>> implements ToBytesAware
         RStr.removeTail(printer, SEP);
         RStr.append(printer, ']');
 
-        return converter.encode(result, bean);
+        return getConverter(new JCListVarLenConverter()).encode(result, bean);
     }
 
 }

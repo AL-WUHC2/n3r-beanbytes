@@ -5,6 +5,7 @@ import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.ByteBean;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
+
 import static org.n3r.core.lang.RByte.*;
 
 @JCApplyTo(value = String.class, linked = JCVarLen.class)
@@ -32,7 +33,7 @@ public class JCStringVarLenConverter extends TypeConverter<String> {
     }
 
     private int getLenBytesNum() {
-        JCVarLen jcLen = field == null ? null : field.getAnnotation(JCVarLen.class);
+        JCVarLen jcLen = (JCVarLen) getAnnotation(JCVarLen.class);
         int lenBytesNum = jcLen != null ? jcLen.value() : 1;
         return lenBytesNum;
     }

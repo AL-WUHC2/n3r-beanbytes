@@ -57,17 +57,18 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
         if (fieldValue == null && nullable) return;
         notNull(fieldValue, "Field %s is not allowed null.", field.getName());
 
-        ToBytesAware<Object> registeredToBytes = BeanBytesClassesScanner.getBindToBytes(field.getType());
-        if (registeredToBytes == null) {
+        ToBytesAware<Object> bindToBytes = BeanBytesClassesScanner.getBindToBytes(field.getType());
+        if (bindToBytes == null) {
             byte[] result = new BeanToBytes<Object>().toBytes(fieldValue, printer);
             bytes = RByte.add(bytes, result);
             return;
         }
 
-        BeanBytesUtils.parseBeanBytes(field, registeredToBytes);
+        BeanBytesUtils.parseBeanBytes(field, bindToBytes);
 
         JCPrint jcPrint = field.getAnnotation(JCPrint.class);
-        byte[] result = registeredToBytes.toBytes(fieldValue, jcPrint != null ? null : printer);
+        // 如果JCPrint为空, 则默认Hex, 否则按照JCPrint设置
+        byte[] result = bindToBytes.toBytes(fieldValue, jcPrint != null ? null : printer);
         PrintUtils.print(printer, result, fieldValue, jcPrint);
 
         bytes = RByte.add(bytes, result);

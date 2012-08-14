@@ -7,11 +7,14 @@ import java.util.List;
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
+import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCVarLen;
+import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RBaseBean;
+import org.n3r.core.lang.RByte;
 
 import com.ailk.phw.utils.beans.Bean2;
 import com.google.common.collect.Lists;
@@ -25,6 +28,9 @@ public class BeanListTest {
         private String name;
         @JCVarLen(1)
         private List<Bean2> bean2;
+        @JCPrint(JCPrintType.ASCII)
+        @JCVarLen(1)
+        private List<String> strLs;
 
         public String getName() {
             return name;
@@ -41,6 +47,14 @@ public class BeanListTest {
         public void setBean2(List<Bean2> bean2) {
             this.bean2 = bean2;
         }
+
+        public void setStrLs(List<String> strLs) {
+            this.strLs = strLs;
+        }
+
+        public List<String> getStrLs() {
+            return strLs;
+        }
     }
 
     @Test
@@ -50,14 +64,18 @@ public class BeanListTest {
         Bean2 bean2 = new Bean2();
         bean2.setAge(32);
         bean1.setBean2(Arrays.asList(bean2));
+        bean1.setStrLs(Arrays.asList("123", "456"));
 
         StringBuilder printer = new StringBuilder();
         byte[] bytes = new BeanToBytes<Bean1>().toBytes(bean1, printer);
         byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
         expected = add(expected, BeanBytesUtils.prependLen(toBytes(32), 1, 1));
+        byte[] strLsBytes = RByte.add(BeanBytesUtils.prependLen(RByte.toBytes("123"), 1),
+                BeanBytesUtils.prependLen(RByte.toBytes("456"), 1));
+        expected = add(expected, BeanBytesUtils.prependLen(strLsBytes, 1, 2));
 
         assertArrayEquals(expected, bytes);
-        assertEquals("{name:03686A62, bean2:[{age:32}]}", printer.toString());
+        assertEquals("{name:03686A62, bean2:[{age:32}], strLs:[123, 456]}", printer.toString());
 
         FromBytesAware<Bean1> beanFromBytes2 = new BeanFromBytes<Bean1>();
         Bean1 simpleBean1 = beanFromBytes2.fromBytes(bytes, Bean1.class, 0).getBean();
@@ -68,12 +86,13 @@ public class BeanListTest {
     public void testNull() {
         Bean1 bean1 = new Bean1();
         bean1.setName("hjb");
-        bean1.setBean2(null);
+        bean1.setBean2(Arrays.asList(new Bean2()));
 
         ToBytesAware<Bean1> toBytes1 = new BeanToBytes<Bean1>();
         FromBytesAware<Bean1> fromBytes1 = new BeanFromBytes<Bean1>();
         byte[] bytes = toBytes1.toBytes(bean1, null);
         byte[] expected = BeanBytesUtils.prependLen(toBytes("hjb"), 1);
+        expected = add(expected, BeanBytesUtils.prependLen(toBytes(0), 1, 1));
         assertArrayEquals(expected, bytes);
         Bean1 bean2 = fromBytes1.fromBytes(bytes, Bean1.class, 0).getBean();
         assertEquals(bean1, bean2);
@@ -91,7 +110,7 @@ public class BeanListTest {
         expected = add(expected, toBytes((byte) 0));
 
         assertArrayEquals(expected, bytes);
-        assertEquals("{name:03686A62, bean2:[]}", printer.toString());
+        assertEquals("{name:03686A62, bean2:[], strLs:}", printer.toString());
 
         FromBytesAware<Bean1> beanFromBytes2 = new BeanFromBytes<Bean1>();
         Bean1 simpleBean1 = beanFromBytes2.fromBytes(bytes, Bean1.class, 0).getBean();
@@ -120,7 +139,7 @@ public class BeanListTest {
         expected = add(expected, toBytes(68));
 
         assertArrayEquals(expected, bytes);
-        assertEquals("{name:03686A62, bean2:[{age:32}, {age:45}, {age:68}]}", printer.toString());
+        assertEquals("{name:03686A62, bean2:[{age:32}, {age:45}, {age:68}], strLs:}", printer.toString());
 
         FromBytesAware<Bean1> beanFromBytes2 = new BeanFromBytes<Bean1>();
         Bean1 simpleBean1 = beanFromBytes2.fromBytes(bytes, Bean1.class, 0).getBean();

@@ -19,10 +19,6 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         this.options.put(name, option);
     }
 
-    public void setConverter(BytesConverterAware<T> converter) {
-        this.converter = converter;
-    }
-
     protected Object getOption(String optionName) {
         return options.get(optionName);
     }
@@ -30,5 +26,13 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
     protected Object getOption(String optionName, Object defaultValue) {
         Object optionValue = getOption(optionName);
         return optionValue != null ? optionValue : defaultValue;
+    }
+
+    public void setConverter(BytesConverterAware<T> converter) {
+        this.converter = converter;
+    }
+
+    public BytesConverterAware<T> getConverter(BytesConverterAware<T> defaultConverter) {
+        return converter != null ? converter : defaultConverter;
     }
 }

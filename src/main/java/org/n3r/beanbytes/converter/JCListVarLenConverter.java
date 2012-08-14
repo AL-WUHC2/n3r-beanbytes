@@ -1,7 +1,5 @@
 package org.n3r.beanbytes.converter;
 
-import static org.n3r.core.lang.RByte.*;
-
 import java.util.List;
 
 import org.n3r.beanbytes.TypeConverter;
@@ -10,11 +8,13 @@ import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.ByteBean;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 
-@JCApplyTo(value=List.class, linked=JCVarLen.class)
-public class JCListVarLenConverter extends TypeConverter<List<?>> {
+import static org.n3r.core.lang.RByte.*;
+
+@JCApplyTo(value = List.class, linked = JCVarLen.class)
+public class JCListVarLenConverter extends TypeConverter<List<Object>> {
 
     @Override
-    public byte[] encode(byte[] bytes, List<?> value) {
+    public byte[] encode(byte[] bytes, List<Object> value) {
         JCVarLen jcLen = field.getAnnotation(JCVarLen.class);
 
         return BeanBytesUtils.prependLen(bytes, jcLen.value(), value.size());
