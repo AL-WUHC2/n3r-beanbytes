@@ -14,7 +14,7 @@ public class StringFromBytes extends BaseBytes<String> implements FromBytesAware
 
     @Override
     public FromByteBean<String> fromBytes(byte[] bytes, Class<?> class1, int offset) {
-        ByteBean byteBean = getConverter(new JCStringVarLenConverter()).decode(bytes, offset);
+        ByteBean byteBean = getConverter(JCStringVarLenConverter.class).decode(bytes, offset);
 
         String str = toStr(byteBean.getResult(), "" + getOption("charsetName", "UTF-8"));
         return new FromByteBean<String>(str, byteBean.getProcessBytesNum());

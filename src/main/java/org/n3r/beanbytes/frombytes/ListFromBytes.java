@@ -20,7 +20,7 @@ public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesA
     @Override
     public FromByteBean<List<Object>> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         int offset2 = offset;
-        ByteBean byteBean = getConverter(new JCListVarLenConverter()).decode(bytes, offset);
+        ByteBean byteBean = getConverter(JCListVarLenConverter.class).decode(bytes, offset);
         offset2 += byteBean.getProcessBytesNum();
 
         List<Object> result = Lists.newArrayList();

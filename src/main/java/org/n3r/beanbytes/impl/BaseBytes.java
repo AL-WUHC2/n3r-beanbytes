@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
+import org.n3r.core.lang.RClass;
 
 import com.google.common.collect.Maps;
 
@@ -32,7 +33,7 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         this.converter = converter;
     }
 
-    public BytesConverterAware<T> getConverter(BytesConverterAware<T> defaultConverter) {
-        return converter != null ? converter : defaultConverter;
+    public BytesConverterAware<T> getConverter(Class<? extends BytesConverterAware> defConverterClass) {
+        return converter != null ? converter : RClass.newInstance(defConverterClass);
     }
 }

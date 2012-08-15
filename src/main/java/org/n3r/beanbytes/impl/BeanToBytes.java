@@ -21,10 +21,10 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     @Override
     public byte[] toBytes(T bean, StringBuilder printer) {
         // 检查是否针对该类型已有转换器
-        ToBytesAware<T> registeredToBytes = BeanBytesClassesScanner.getBindToBytes(bean.getClass());
-        if (registeredToBytes != null) {
-            registeredToBytes.addOptions(options);
-            return registeredToBytes.toBytes(bean, printer);
+        ToBytesAware<T> bindToBytes = BeanBytesClassesScanner.getBindToBytes(bean.getClass());
+        if (bindToBytes != null) {
+            bindToBytes.addOptions(options);
+            return bindToBytes.toBytes(bean, printer);
         }
 
         // 当做JAVA BEAN处理，遍历fields

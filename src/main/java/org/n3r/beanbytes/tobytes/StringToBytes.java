@@ -14,7 +14,7 @@ public class StringToBytes extends BaseBytes<String> implements ToBytesAware<Str
     public byte[] toBytes(String str, StringBuilder printer) {
         byte[] bytes = RByte.toBytes(str, "" + getOption("charsetName", "UTF-8"));
 
-        bytes = getConverter(new JCStringVarLenConverter()).encode(bytes, str);
+        bytes = getConverter(JCStringVarLenConverter.class).encode(bytes, str);
 
         RStr.append(printer, RHex.encode(bytes));
 

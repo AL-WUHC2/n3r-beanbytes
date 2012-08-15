@@ -30,7 +30,7 @@ public class ListToBytes extends BaseBytes<List<Object>> implements ToBytesAware
         RStr.removeTail(printer, SEP);
         RStr.append(printer, ']');
 
-        return getConverter(new JCListVarLenConverter()).encode(result, bean);
+        return getConverter(JCListVarLenConverter.class).encode(result, bean);
     }
 
 }

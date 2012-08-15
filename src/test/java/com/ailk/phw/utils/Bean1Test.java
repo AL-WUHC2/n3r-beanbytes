@@ -1,14 +1,11 @@
 package com.ailk.phw.utils;
 
 import org.junit.Test;
-import org.n3r.beanbytes.FromByteBean;
 import org.n3r.beanbytes.FromBytesAware;
-import org.n3r.beanbytes.annotations.JCTruncLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RBaseBean;
-import org.n3r.core.lang.RByte;
 
 import com.ailk.phw.utils.beans.Bean2;
 
@@ -38,37 +35,6 @@ public class Bean1Test {
         }
     }
 
-    public static class TruncBean extends RBaseBean {
-        private int noTrunc;
-        @JCTruncLen(value = 1, pad = "01")
-        private int trunc;
-        private int noTrunc2;
-
-        public void setNoTrunc(int noTrunc) {
-            this.noTrunc = noTrunc;
-        }
-
-        public int getNoTrunc() {
-            return noTrunc;
-        }
-
-        public void setTrunc(int trunc) {
-            this.trunc = trunc;
-        }
-
-        public int getTrunc() {
-            return trunc;
-        }
-
-        public void setNoTrunc2(int noTrunc2) {
-            this.noTrunc2 = noTrunc2;
-        }
-
-        public int getNoTrunc2() {
-            return noTrunc2;
-        }
-    }
-
     @Test
     public void test1() {
         Bean1 bean1 = new Bean1();
@@ -90,18 +56,4 @@ public class Bean1Test {
         assertEquals(bean1, simpleBean1);
     }
 
-    @Test
-    public void test2() {
-        TruncBean bean = new TruncBean();
-        bean.setNoTrunc(16777216);
-        bean.setTrunc(16777216);
-        bean.setNoTrunc2(16777216);
-        byte[] bytes = new BeanToBytes<TruncBean>().toBytes(bean, null);
-        byte[] expected = RByte.add(RByte.toBytes(16777216), RByte.toBytes((byte) 0), RByte.toBytes((short) 0));
-        expected = RByte.add(expected, RByte.toBytes(16777216));
-        assertArrayEquals(expected, bytes);
-
-        FromByteBean<TruncBean> fromBytes = new BeanFromBytes<TruncBean>().fromBytes(bytes, TruncBean.class, 0);
-        assertEquals(bean, fromBytes.getBean());
-    }
 }
