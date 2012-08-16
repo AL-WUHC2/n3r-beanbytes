@@ -11,13 +11,12 @@ public class JCDataTypeUtils {
         switch (dataType) {
         case Octet:
         case ASCII:
-            return toBytes(value, RStr.toStr(charset, "UTF-8"));
+            return toBytes(value, RStr.toStr(charset, JCConstantUtils.CHARSET_UTF8));
         case HEX:
         default:
-            if (RStr.isNotEmpty(charset)) { return toBytes(value, charset); }
-            if (value.length() % 2 == 1) {
-                value += "F";
-            }
+            if (RStr.isNotEmpty(charset)) return toBytes(value, charset);
+            if (value.length() % 2 == 1) value += "F";
+
             return RHex.decode(value);
         }
     }
@@ -26,7 +25,7 @@ public class JCDataTypeUtils {
         switch (dataType) {
         case Octet:
         case ASCII:
-            return toStr(bytes, RStr.toStr(charset, "UTF-8"));
+            return toStr(bytes, RStr.toStr(charset, JCConstantUtils.CHARSET_UTF8));
         case HEX:
         default:
             if (RStr.isNotEmpty(charset)) { return toStr(bytes, charset); }

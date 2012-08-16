@@ -2,11 +2,11 @@ package org.n3r.beanbytes.impl;
 
 import java.lang.reflect.Field;
 
-import org.joor.Reflect;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
+import org.n3r.core.joor.Reflect;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RField;
 import org.n3r.core.lang.RStr;

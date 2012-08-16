@@ -2,9 +2,9 @@ package org.n3r.beanbytes.impl;
 
 import java.util.Map;
 
-import org.joor.Reflect;
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
+import org.n3r.core.joor.Reflect;
 
 import com.google.common.collect.Maps;
 

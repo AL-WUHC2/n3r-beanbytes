@@ -3,11 +3,11 @@ package org.n3r.beanbytes.utils;
 import java.util.Map;
 import java.util.Set;
 
-import org.joor.Reflect;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCBindType;
+import org.n3r.core.joor.Reflect;
 import org.reflections.Reflections;
 
 import static com.google.common.collect.Maps.*;

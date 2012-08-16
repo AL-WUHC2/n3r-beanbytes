@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-import org.joor.Reflect;
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
 import org.n3r.beanbytes.JCDataType;
@@ -14,6 +13,7 @@ import org.n3r.beanbytes.annotations.JCOption;
 import org.n3r.beanbytes.annotations.JCOptions;
 import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BaseBytes;
+import org.n3r.core.joor.Reflect;
 import org.n3r.core.lang.RClass;
 import org.n3r.core.lang.RStr;
 

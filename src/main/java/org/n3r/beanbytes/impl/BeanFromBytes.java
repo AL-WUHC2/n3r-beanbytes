@@ -2,12 +2,12 @@ package org.n3r.beanbytes.impl;
 
 import java.lang.reflect.Field;
 
-import org.joor.Reflect;
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ParseBean;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
+import org.n3r.core.joor.Reflect;
 import org.n3r.core.lang.RField;
 
 public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> {
