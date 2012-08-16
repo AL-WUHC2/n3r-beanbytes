@@ -10,7 +10,7 @@ import org.n3r.beanbytes.converter.JCListVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.core.lang.RField;
+import org.n3r.core.lang.RType;
 
 @JCBindType(List.class)
 public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesAware<List<Object>> {
@@ -39,7 +39,7 @@ public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesA
 
     private Class<?> getItemClass() {
         Type genericType = (Type) getOption("FieldGenericType");
-        Class<?> itemClass = RField.getActualTypeArgument(genericType);
+        Class<?> itemClass = RType.getActualTypeArgument(genericType);
         if (itemClass != Void.class) return itemClass;
 
         throw new RuntimeException("Unkown List Item Class for field " + getOption("FieldName"));

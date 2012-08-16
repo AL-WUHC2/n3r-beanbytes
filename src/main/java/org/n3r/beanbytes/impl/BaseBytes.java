@@ -33,7 +33,7 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         this.converter = converter;
     }
 
-    public BytesConverterAware<T> getConverter(Class<? extends BytesConverterAware> defConverterClass) {
-        return converter != null ? converter : (BytesConverterAware<T>) Reflect.on(defConverterClass).create().get();
+    public BytesConverterAware<T> getConverter(Class<?> defConverterClass) {
+        return converter != null ? converter : Reflect.on(defConverterClass).create().<BytesConverterAware<T>> get();
     }
 }

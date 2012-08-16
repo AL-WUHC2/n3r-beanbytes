@@ -101,7 +101,7 @@ public class BeanBytesUtils {
                 };
             }
             converter.call("setConvertParam", params);
-            itemAware.setConverter((BytesConverterAware<Object>) converter.get());
+            itemAware.setConverter(converter.<BytesConverterAware<Object>> get());
         }
     }
 
