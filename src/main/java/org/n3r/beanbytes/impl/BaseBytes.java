@@ -2,9 +2,9 @@ package org.n3r.beanbytes.impl;
 
 import java.util.Map;
 
+import org.joor.Reflect;
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
-import org.n3r.core.lang.RClass;
 
 import com.google.common.collect.Maps;
 
@@ -20,11 +20,11 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         this.options.put(name, option);
     }
 
-    protected Object getOption(String optionName) {
+    public Object getOption(String optionName) {
         return options.get(optionName);
     }
 
-    protected Object getOption(String optionName, Object defaultValue) {
+    public Object getOption(String optionName, Object defaultValue) {
         Object optionValue = getOption(optionName);
         return optionValue != null ? optionValue : defaultValue;
     }
@@ -34,6 +34,6 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
     }
 
     public BytesConverterAware<T> getConverter(Class<? extends BytesConverterAware> defConverterClass) {
-        return converter != null ? converter : RClass.newInstance(defConverterClass);
+        return converter != null ? converter : (BytesConverterAware<T>) Reflect.on(defConverterClass).create().get();
     }
 }

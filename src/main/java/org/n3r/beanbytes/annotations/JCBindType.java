@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * °ó¶¨¾ßÌåÀàĞÍtobytes, frombytesÊµÏÖ¡£
+ * ç»‘å®šå…·ä½“ç±»å‹tobytes, frombyteså®ç°ã€‚
  * @author Bingoo
  *
  */

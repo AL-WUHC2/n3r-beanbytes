@@ -3,37 +3,38 @@ package org.n3r.beanbytes.frombytes;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.n3r.beanbytes.FromByteBean;
 import org.n3r.beanbytes.FromBytesAware;
+import org.n3r.beanbytes.ParseBean;
 import org.n3r.beanbytes.annotations.JCBindType;
 import org.n3r.beanbytes.converter.JCListVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.beanbytes.impl.BeanFromBytes;
-import org.n3r.beanbytes.impl.ByteBean;
+import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RField;
-
-import com.google.common.collect.Lists;
 
 @JCBindType(List.class)
 public class ListFromBytes extends BaseBytes<List<Object>> implements FromBytesAware<List<Object>> {
 
     @Override
-    public FromByteBean<List<Object>> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
+    public ParseBean<List<Object>> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         int offset2 = offset;
-        ByteBean byteBean = getConverter(JCListVarLenConverter.class).decode(bytes, offset);
-        offset2 += byteBean.getProcessBytesNum();
+        ParseBean<List<Object>> parseBean = getConverter(JCListVarLenConverter.class).decode(bytes, offset);
+        offset2 += parseBean.getBytesSize();
 
-        List<Object> result = Lists.newArrayList();
+        List<Object> result = parseBean.getBean();
 
         Class<?> itemClass = getItemClass();
-        for (int i = 0; i < byteBean.getSize(); i++) {
-            BeanFromBytes<?> beanFromBytes = new BeanFromBytes<Object>();
-            FromByteBean<?> item = beanFromBytes.fromBytes(bytes, itemClass, offset2);
+        for (int i = 0; i < result.size(); i++) {
+            BeanFromBytes<Object> beanFromBytes = new BeanFromBytes<Object>();
+
+            BeanBytesUtils.parseItemConverter(itemClass, beanFromBytes, this);
+
+            ParseBean<?> item = beanFromBytes.fromBytes(bytes, itemClass, offset2);
             offset2 += item.getBytesSize();
-            result.add(item.getBean());
+            result.set(i, item.getBean());
         }
 
-        return new FromByteBean<List<Object>>(result, offset2 - offset);
+        return new ParseBean<List<Object>>(result, offset2 - offset);
     }
 
     private Class<?> getItemClass() {

@@ -1,12 +1,12 @@
 package org.n3r.beanbytes.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.n3r.beanbytes.ParseBean;
 import org.n3r.beanbytes.TypeConverter;
 import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCVarLen;
-import org.n3r.beanbytes.impl.ByteBean;
-import org.n3r.beanbytes.utils.BeanBytesUtils;
 
 import static org.n3r.core.lang.RByte.*;
 
@@ -14,24 +14,25 @@ import static org.n3r.core.lang.RByte.*;
 public class JCListVarLenConverter extends TypeConverter<List<Object>> {
 
     @Override
-    public byte[] encode(byte[] bytes, List<Object> value) {
-        JCVarLen jcLen = field.getAnnotation(JCVarLen.class);
-
-        return BeanBytesUtils.prependLen(bytes, jcLen.value(), value.size());
+    public byte[] encode(List<Object> value) {
+        JCVarLen jcVarLen = (JCVarLen) getAnnotation(JCVarLen.class);
+        int lenBytes = jcVarLen == null ? 1 : jcVarLen.lenBytes();
+        byte[] lengthBytes = toBytes(value.size());
+        return subBytes(lengthBytes, lengthBytes.length - lenBytes);
     }
 
     @Override
-    public ByteBean decode(byte[] bytes, int offset) {
-        JCVarLen jcLen = field.getAnnotation(JCVarLen.class);
-        byte[] lenByte = subBytes(bytes, offset, jcLen.value());
+    public ParseBean<List<Object>> decode(byte[] bytes, int offset) {
+        JCVarLen jcVarLen = (JCVarLen) getAnnotation(JCVarLen.class);
+        int lenBytes = jcVarLen == null ? 1 : jcVarLen.lenBytes();
+        byte[] lenByte = subBytes(bytes, offset, lenBytes);
         int size = toInt(padHead(lenByte, 4));
 
-        ByteBean byteBean = new ByteBean();
-        byteBean.setResult(subBytes(bytes, offset + jcLen.value()));
-        byteBean.setProcessBytesNum(jcLen.value());
-        byteBean.setSize(size);
+        List<Object> result = new ArrayList<Object>();
+        for (int i = 0; i < size; i++) {
+            result.add(null);
+        }
 
-        return byteBean;
+        return new ParseBean<List<Object>>(result, lenBytes);
     }
-
 }

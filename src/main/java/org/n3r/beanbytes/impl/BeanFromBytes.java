@@ -3,8 +3,8 @@ package org.n3r.beanbytes.impl;
 import java.lang.reflect.Field;
 
 import org.joor.Reflect;
-import org.n3r.beanbytes.FromByteBean;
 import org.n3r.beanbytes.FromBytesAware;
+import org.n3r.beanbytes.ParseBean;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
@@ -16,13 +16,14 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
     private int offset;
 
     @Override
-    public FromByteBean<T> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
+    public ParseBean<T> fromBytes(byte[] bytes, Class<?> clazz, int offset) {
         this.offset = offset;
         // 检查是否针对该类型已有转换器
         FromBytesAware<T> bindFromBytes = BeanBytesClassesScanner.getBindFromBytes(clazz);
         if (bindFromBytes != null) {
             bindFromBytes.addOptions(options);
-            FromByteBean<T> result = bindFromBytes.fromBytes(bytes, clazz, offset);
+            bindFromBytes.setConverter(converter);
+            ParseBean<T> result = bindFromBytes.fromBytes(bytes, clazz, offset);
             return result;
         }
 
@@ -36,7 +37,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
             Reflect.on(obj).set(field.getName(), fieldValue);
         }
 
-        return new FromByteBean<T>(obj, bytesSize);
+        return new ParseBean<T>(obj, bytesSize);
     }
 
     private Object parseFieldValue(byte[] bytes, Field field) {
@@ -52,7 +53,7 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
             bindFromBytes.addOption("FieldName", field.getName());
         }
 
-        FromByteBean<Object> result = bindFromBytes.fromBytes(bytes, field.getType(), offset + bytesSize);
+        ParseBean<Object> result = bindFromBytes.fromBytes(bytes, field.getType(), offset + bytesSize);
         bytesSize += result.getBytesSize();
 
         return result.getBean();

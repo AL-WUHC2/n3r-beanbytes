@@ -2,12 +2,14 @@ package com.ailk.phw.utils;
 
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
+import org.n3r.beanbytes.JCDataType;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCTransient;
+import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.core.lang.RBaseBean;
-
+import org.n3r.core.lang.RByte;
 
 import static org.junit.Assert.*;
 
@@ -19,19 +21,18 @@ public class SimpleBean1Test {
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
-        beanToBytes.addOption("charsetName", "UTF-16LE");
-        beanToBytes.setConverter(null);
-        byte[] bytes = beanToBytes.toBytes("123", null);
-        assertArrayEquals(prependLen(toBytes("123", "UTF-16LE"), 1), bytes);
+        byte[] bytes = beanToBytes.toBytes("1234", null);
+        byte[] expected = RByte.add(RByte.toBytes((byte) 18), RByte.toBytes((byte) 52));
+        assertArrayEquals(prependLen(expected, 1), bytes);
 
         FromBytesAware<String> beanFromBytes = new BeanFromBytes<String>();
         beanFromBytes.addOption("charsetName", "UTF-16LE");
         String str = beanFromBytes.fromBytes(bytes, String.class, 0).getBean();
-        assertEquals("123", str);
+        assertEquals("1234", str);
 
         ToBytesAware<Integer> beanToBytes2 = new BeanToBytes<Integer>();
         bytes = beanToBytes2.toBytes(123, null);
-        byte[] expected = toBytes(123);
+        expected = toBytes(123);
         assertArrayEquals(expected, bytes);
 
         FromBytesAware<Integer> beanFromBytes2 = new BeanFromBytes<Integer>();
@@ -60,6 +61,7 @@ public class SimpleBean1Test {
     }
 
     public static class SimpleBean1 extends RBaseBean {
+        @JCVarLen(dataType = JCDataType.ASCII)
         private String name;
         private int age;
         @JCTransient

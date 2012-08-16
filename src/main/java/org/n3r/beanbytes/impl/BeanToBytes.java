@@ -4,16 +4,14 @@ import java.lang.reflect.Field;
 
 import org.joor.Reflect;
 import org.n3r.beanbytes.ToBytesAware;
-import org.n3r.beanbytes.annotations.JCPrint;
 import org.n3r.beanbytes.annotations.JCTransient;
 import org.n3r.beanbytes.utils.BeanBytesClassesScanner;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
-import org.n3r.beanbytes.utils.PrintUtils;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RField;
 import org.n3r.core.lang.RStr;
 
-import static org.apache.commons.lang3.Validate.*;
+import static org.n3r.core.lang3.Validate.*;
 
 public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     private byte[] bytes = null;
@@ -24,6 +22,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
         ToBytesAware<T> bindToBytes = BeanBytesClassesScanner.getBindToBytes(bean.getClass());
         if (bindToBytes != null) {
             bindToBytes.addOptions(options);
+            bindToBytes.setConverter(converter);
             return bindToBytes.toBytes(bean, printer);
         }
 
@@ -66,10 +65,7 @@ public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
 
         BeanBytesUtils.parseBeanBytes(field, bindToBytes);
 
-        JCPrint jcPrint = field.getAnnotation(JCPrint.class);
-        // 如果JCPrint为空, 则默认Hex, 否则按照JCPrint设置
-        byte[] result = bindToBytes.toBytes(fieldValue, jcPrint != null ? null : printer);
-        PrintUtils.print(printer, result, fieldValue, jcPrint);
+        byte[] result = bindToBytes.toBytes(fieldValue, printer);
 
         bytes = RByte.add(bytes, result);
     }

@@ -1,11 +1,9 @@
 package com.ailk.phw.utils;
 
 import org.junit.Test;
+import org.n3r.beanbytes.JCDataType;
 import org.n3r.beanbytes.annotations.JCFixLen;
-import org.n3r.beanbytes.annotations.JCPrint;
-import org.n3r.beanbytes.annotations.JCPrint.JCPrintType;
 import org.n3r.beanbytes.impl.BeanToBytes;
-import org.n3r.beanbytes.utils.PrintUtils;
 import org.n3r.core.lang.RBaseBean;
 
 import static org.junit.Assert.*;
@@ -15,8 +13,6 @@ import static org.n3r.core.lang.RByte.*;
 public class JCPrintTest {
     @Test
     public void test1() {
-        assertNotNull(new PrintUtils());
-
         BeanToBytes<JCPrintBean> toBytes = new BeanToBytes<JCPrintBean>();
         JCPrintBean bean = new JCPrintBean();
         bean.setName("hjb");
@@ -25,24 +21,23 @@ public class JCPrintTest {
         StringBuilder printer = new StringBuilder();
         byte[] bytes = toBytes.toBytes(bean, printer);
         byte[] expected = padTail(toBytes("hjb"), 10);
-        expected = add(expected, padTail(toBytes("nj"), 10, (byte) 0x00));
-        expected = add(expected, padTail(toBytes("bjh@qq.com"), 20, (byte) 0xFF));
+        expected = add(expected, padTail(toBytes("nj"), 10, (byte) 0xFF));
+        expected = add(expected, padTail(toBytes("bjh@qq.com"), 20, (byte) 0x00));
 
         assertArrayEquals(expected, bytes);
 
-        assertSame(JCPrintType.ASCII, JCPrintType.valueOf("ASCII"));
+        assertSame(JCDataType.ASCII, JCDataType.valueOf("ASCII"));
 
         bytes = toBytes.toBytes(bean, null);
         assertArrayEquals(expected, bytes);
     }
 
     public static class JCPrintBean extends RBaseBean {
-        @JCFixLen(value = 10)
+        @JCFixLen(length = 10, dataType = JCDataType.Octet)
         private String name;
-        @JCFixLen(value = 10, pad = "00")
+        @JCFixLen(length = 10, pad = "FF", dataType = JCDataType.Octet)
         private String addr;
-        @JCPrint(JCPrintType.ASCII)
-        @JCFixLen(value = 20)
+        @JCFixLen(length = 20, dataType = JCDataType.Octet)
         private String email;
 
         public String getEmail() {

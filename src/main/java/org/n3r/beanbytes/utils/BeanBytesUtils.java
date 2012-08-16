@@ -1,15 +1,21 @@
 package org.n3r.beanbytes.utils;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 import org.joor.Reflect;
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
+import org.n3r.beanbytes.JCDataType;
 import org.n3r.beanbytes.annotations.JCApplyTo;
+import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.annotations.JCOption;
 import org.n3r.beanbytes.annotations.JCOptions;
+import org.n3r.beanbytes.annotations.JCVarLen;
+import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.core.lang.RClass;
+import org.n3r.core.lang.RStr;
 
 import com.google.common.collect.Maps;
 
@@ -31,12 +37,12 @@ public class BeanBytesUtils {
         byteAware.addOptions(parseOptions(field));
 
         Class<?> converterClass = null;
-        for (Class<?> class1 : BeanBytesClassesScanner.getApplyToClasses()) {
-            JCApplyTo applyTo = class1.getAnnotation(JCApplyTo.class);
+        for (Class<?> clazz : BeanBytesClassesScanner.getApplyToClasses()) {
+            JCApplyTo applyTo = clazz.getAnnotation(JCApplyTo.class);
             if (!field.isAnnotationPresent(applyTo.linked())) continue;
             if (!RClass.isAssignable(field.getType(), applyTo.value())) continue;
 
-            converterClass = class1;
+            converterClass = clazz;
             break;
         }
 
@@ -62,6 +68,41 @@ public class BeanBytesUtils {
         }
 
         return options;
+    }
+
+    public static void parseItemConverter(Class<?> clazz, BytesAware<Object> itemAware,
+            BaseBytes<List<Object>> listAware) {
+        Class<?> converterClass = null;
+        Object itemLen = listAware.getOption("ItemLen", JCVarLen.class.getName());
+        for (Class<?> apply : BeanBytesClassesScanner.getApplyToClasses()) {
+            JCApplyTo applyTo = apply.getAnnotation(JCApplyTo.class);
+            if (!Reflect.on(RStr.toStr(itemLen)).type().equals(applyTo.linked())) continue;
+            if (!RClass.isAssignable(clazz, applyTo.value())) continue;
+
+            converterClass = apply;
+            break;
+        }
+        if (converterClass != null) {
+            Reflect converter = Reflect.on(converterClass).create();
+            Object[] params = new Object[0];
+            if (itemLen.equals(JCFixLen.class.getName())) {
+                params = new Object[] {
+                        JCDataType.valueOf(RStr.toStr(listAware.getOption("ItemDataType", "HEX"))),
+                        Integer.valueOf(RStr.toStr(listAware.getOption("ItemLength", "0"))),
+                        RStr.toStr(listAware.getOption("ItemPad", "")),
+                        RStr.toStr(listAware.getOption("ItemCharset", ""))
+                };
+            }
+            else {
+                params = new Object[] {
+                        JCDataType.valueOf(RStr.toStr(listAware.getOption("ItemDataType", "HEX"))),
+                        Integer.valueOf(RStr.toStr(listAware.getOption("ItemLenBytes", "1"))),
+                        RStr.toStr(listAware.getOption("ItemCharset", ""))
+                };
+            }
+            converter.call("setConvertParam", params);
+            itemAware.setConverter((BytesConverterAware<Object>) converter.get());
+        }
     }
 
 }

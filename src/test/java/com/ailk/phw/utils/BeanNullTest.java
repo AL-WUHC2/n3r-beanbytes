@@ -2,12 +2,13 @@ package com.ailk.phw.utils;
 
 import org.junit.Test;
 import org.n3r.beanbytes.FromBytesAware;
+import org.n3r.beanbytes.JCDataType;
 import org.n3r.beanbytes.ToBytesAware;
+import org.n3r.beanbytes.annotations.JCVarLen;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RBaseBean;
-
 
 import static org.junit.Assert.*;
 
@@ -15,9 +16,9 @@ import static org.n3r.core.lang.RByte.*;
 
 public class BeanNullTest {
 
-    public static class NullBean extends RBaseBean{
+    public static class NullBean extends RBaseBean {
         private Integer integer;
-
+        @JCVarLen(dataType = JCDataType.ASCII)
         private String middle;
 
         private String string;

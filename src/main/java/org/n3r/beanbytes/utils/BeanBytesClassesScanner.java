@@ -11,7 +11,7 @@ import org.n3r.beanbytes.annotations.JCBindType;
 import org.reflections.Reflections;
 
 import static com.google.common.collect.Maps.*;
-import static org.apache.commons.lang3.ClassUtils.*;
+import static org.n3r.core.lang3.ClassUtils.*;
 
 public class BeanBytesClassesScanner {
     private static Map<Class<?>, Class<?>> toBytesMap = newHashMap();

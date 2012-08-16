@@ -1,12 +1,12 @@
 package org.n3r.beanbytes;
 
-public class FromByteBean<T> {
+public class ParseBean<T> {
 
     private T bean;
 
     private int bytesSize;
 
-    public FromByteBean(T bean, int bytesSize) {
+    public ParseBean(T bean, int bytesSize) {
         this.bean = bean;
         this.bytesSize = bytesSize;
     }

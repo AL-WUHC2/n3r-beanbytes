@@ -7,6 +7,7 @@ import org.n3r.beanbytes.annotations.JCBindType;
 import org.n3r.beanbytes.converter.JCListVarLenConverter;
 import org.n3r.beanbytes.impl.BaseBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
+import org.n3r.beanbytes.utils.BeanBytesUtils;
 import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RStr;
 
@@ -21,6 +22,9 @@ public class ListToBytes extends BaseBytes<List<Object>> implements ToBytesAware
         RStr.append(printer, '[');
         for (Object item : bean) {
             BeanToBytes<Object> beanToBytes = new BeanToBytes<Object>();
+
+            BeanBytesUtils.parseItemConverter(item.getClass(), beanToBytes, this);
+
             byte[] itemBytes = beanToBytes.toBytes(item, printer);
             result = RByte.add(result, itemBytes);
 
@@ -30,7 +34,6 @@ public class ListToBytes extends BaseBytes<List<Object>> implements ToBytesAware
         RStr.removeTail(printer, SEP);
         RStr.append(printer, ']');
 
-        return getConverter(JCListVarLenConverter.class).encode(result, bean);
+        return RByte.add(getConverter(JCListVarLenConverter.class).encode(bean), result);
     }
-
 }
