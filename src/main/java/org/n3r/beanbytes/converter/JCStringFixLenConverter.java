@@ -19,7 +19,7 @@ public class JCStringFixLenConverter extends TypeConverter<String> {
     private String charset;
 
     @Override
-    public byte[] encode(String value) {
+    public byte[] encode(String value, StringBuilder printer) {
         if (dataType == null) setConvertParam();
         byte[] bytes = JCDataTypeUtils.encode(value, dataType, charset);
         return padTail(bytes, length, getPadChar(pad));

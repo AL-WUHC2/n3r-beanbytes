@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.n3r.beanbytes.BytesAware;
 import org.n3r.beanbytes.BytesConverterAware;
+import org.n3r.beanbytes.converter.JCNullConverter;
 import org.n3r.core.joor.Reflect;
 
 import com.google.common.collect.Maps;
@@ -29,11 +30,14 @@ public abstract class BaseBytes<T> implements BytesAware<T> {
         return optionValue != null ? optionValue : defaultValue;
     }
 
-    public void setConverter(BytesConverterAware<T> converter) {
+    public BytesAware<T> setConverter(BytesConverterAware<T> converter) {
         this.converter = converter;
+        return this;
     }
 
     public BytesConverterAware<T> getConverter(Class<?> defConverterClass) {
-        return converter != null ? converter : Reflect.on(defConverterClass).create().<BytesConverterAware<T>> get();
+        if (converter != null && !converter.getClass().equals(JCNullConverter.class)) return converter;
+        BytesConverterAware<T> defConverter = Reflect.on(defConverterClass).create().get();
+        return defConverter.setField(converter != null ? converter.getField() : null);
     }
 }

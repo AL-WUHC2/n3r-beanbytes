@@ -12,6 +12,6 @@ public class StringToBytes extends BaseBytes<String> implements ToBytesAware<Str
     public byte[] toBytes(String str, StringBuilder printer) {
         RStr.append(printer, str);
 
-        return getConverter(JCStringVarLenConverter.class).encode(str);
+        return getConverter(JCStringVarLenConverter.class).encode(str, printer);
     }
 }

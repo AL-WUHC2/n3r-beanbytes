@@ -44,14 +44,9 @@ public class BeanFromBytes<T> extends BaseBytes<T> implements FromBytesAware<T> 
         if (offset + bytesSize >= bytes.length) return null;
 
         FromBytesAware<Object> bindFromBytes = BeanBytesClassesScanner.getBindFromBytes(field.getType());
-        if (bindFromBytes == null) {
-            bindFromBytes = new BeanFromBytes<Object>();
-        }
-        else {
-            BeanBytesUtils.parseBeanBytes(field, bindFromBytes);
-            bindFromBytes.addOption("FieldGenericType", field.getGenericType());
-            bindFromBytes.addOption("FieldName", field.getName());
-        }
+        if (bindFromBytes == null) bindFromBytes = new BeanFromBytes<Object>();
+
+        BeanBytesUtils.parseBeanBytes(field, bindFromBytes);
 
         ParseBean<Object> result = bindFromBytes.fromBytes(bytes, field.getType(), offset + bytesSize);
         bytesSize += result.getBytesSize();

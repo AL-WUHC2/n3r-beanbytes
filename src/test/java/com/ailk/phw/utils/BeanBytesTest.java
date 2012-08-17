@@ -38,6 +38,11 @@ public class BeanBytesTest {
         ParseBean<HexBean> fromBytes = beanFromBytes.fromBytes(bytes, HexBean.class, 0);
         bean.setFixLenStr("14141F");
         assertEquals(bean, fromBytes.getBean());
+
+        assertNull(beanFromBytes.getOption("Charset"));
+        assertEquals("UTF-8", beanFromBytes.getOption("Charset", "UTF-8"));
+        beanFromBytes.addOption("Charset", "UTF-16LE");
+        assertEquals("UTF-16LE", beanFromBytes.getOption("Charset", "UTF-8"));
     }
 
     @Test

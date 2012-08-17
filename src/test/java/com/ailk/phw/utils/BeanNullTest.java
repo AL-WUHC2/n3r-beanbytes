@@ -5,6 +5,7 @@ import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.JCDataType;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCVarLen;
+import org.n3r.beanbytes.converter.JCNullConverter;
 import org.n3r.beanbytes.impl.BeanFromBytes;
 import org.n3r.beanbytes.impl.BeanToBytes;
 import org.n3r.beanbytes.utils.BeanBytesUtils;
@@ -76,5 +77,14 @@ public class BeanNullTest {
         catch (RuntimeException e) {
             assertEquals("Field middle is not allowed null.", e.getMessage());
         }
+    }
+
+    @Test
+    public void testNullConverter() {
+        JCNullConverter<Object> jcNullConverter = new JCNullConverter<Object>();
+        byte[] bytes = jcNullConverter.encode(null, null);
+
+        assertArrayEquals(new byte[0], bytes);
+        assertNull(jcNullConverter.decode(bytes, 0).getBean());
     }
 }

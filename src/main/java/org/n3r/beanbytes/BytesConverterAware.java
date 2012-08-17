@@ -3,10 +3,11 @@ package org.n3r.beanbytes;
 import java.lang.reflect.Field;
 
 public interface BytesConverterAware<T> {
-    void setField(Field field);
+    BytesConverterAware<T> setField(Field field);
 
-    byte[] encode(T value);
+    Field getField();
+
+    byte[] encode(T value, StringBuilder printer);
 
     ParseBean<T> decode(byte[] bytes, int offset);
-
 }

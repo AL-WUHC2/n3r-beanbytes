@@ -49,5 +49,4 @@ public class BeanBytesClassesScanner {
 
         return Reflect.on(clz).create().get();
     }
-
 }
