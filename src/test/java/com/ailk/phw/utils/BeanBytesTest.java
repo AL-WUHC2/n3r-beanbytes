@@ -19,8 +19,8 @@ public class BeanBytesTest {
     @Test
     public void testHex() {
         HexBean bean = new HexBean();
-        bean.setVarLenStr("141414");
-        bean.setFixLenStr("14141");
+        bean.setVarLenStr("0x141414");
+        bean.setFixLenStr("0x14141");
         bean.setVarLenStrWithCharset("接口平台");
 
         StringBuilder printer = new StringBuilder();
@@ -32,10 +32,11 @@ public class BeanBytesTest {
         expected = RByte.add(expected, BeanBytesUtils.prependLen(RByte.toBytes("接口平台", "UTF-16LE"), 1));
 
         assertArrayEquals(expected, bytes);
-        assertEquals("{varLenStr:141414, fixLenStr:14141, varLenStrWithCharset:接口平台}", RStr.toStr(printer));
+        assertEquals("{varLenStr:0x141414, fixLenStr:0x14141, varLenStrWithCharset:接口平台}", RStr.toStr(printer));
 
         BeanFromBytes<HexBean> beanFromBytes = new BeanFromBytes<HexBean>();
         ParseBean<HexBean> fromBytes = beanFromBytes.fromBytes(bytes, HexBean.class, 0);
+        bean.setVarLenStr("141414");
         bean.setFixLenStr("14141F");
         assertEquals(bean, fromBytes.getBean());
 

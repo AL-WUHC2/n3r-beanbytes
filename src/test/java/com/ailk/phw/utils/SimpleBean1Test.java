@@ -21,7 +21,7 @@ public class SimpleBean1Test {
     @Test
     public void test1() {
         ToBytesAware<String> beanToBytes = new BeanToBytes<String>();
-        byte[] bytes = beanToBytes.toBytes("1234", null);
+        byte[] bytes = beanToBytes.toBytes("0x1234", null);
         byte[] expected = RByte.add(RByte.toBytes((byte) 18), RByte.toBytes((byte) 52));
         assertArrayEquals(prependLen(expected, 1), bytes);
 
