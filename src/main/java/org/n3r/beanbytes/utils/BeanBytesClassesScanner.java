@@ -1,27 +1,26 @@
 package org.n3r.beanbytes.utils;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.n3r.beanbytes.FromBytesAware;
 import org.n3r.beanbytes.ToBytesAware;
 import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCBindType;
 import org.n3r.core.joor.Reflect;
-import org.reflections.Reflections;
+import org.n3r.core.lang.RClassPath;
 
 import static com.google.common.collect.Maps.*;
-import static org.n3r.core.lang3.ClassUtils.*;
+import static org.apache.commons.lang3.ClassUtils.*;
 
 public class BeanBytesClassesScanner {
     private static Map<Class<?>, Class<?>> toBytesMap = newHashMap();
     private static Map<Class<?>, Class<?>> toBeanMap = newHashMap();
-    private static Set<Class<?>> applyToClasses;
+    private static List<Class<?>> applyToClasses;
     static {
-        Reflections reflections = new Reflections("org.n3r");
-        applyToClasses = reflections.getTypesAnnotatedWith(JCApplyTo.class);
+        applyToClasses = RClassPath.getAnnotatedClasses("org.n3r.beanbytes", JCApplyTo.class);
 
-        for (Class<?> clz : reflections.getTypesAnnotatedWith(JCBindType.class)) {
+        for (Class<?> clz : RClassPath.getAnnotatedClasses("org.n3r.beanbytes", JCBindType.class)) {
             JCBindType bindType = clz.getAnnotation(JCBindType.class);
 
             Class<?> byteClass = bindType.value();
@@ -30,7 +29,7 @@ public class BeanBytesClassesScanner {
         }
     }
 
-    public static Set<Class<?>> getApplyToClasses() {
+    public static List<Class<?>> getApplyToClasses() {
         return applyToClasses;
     }
 

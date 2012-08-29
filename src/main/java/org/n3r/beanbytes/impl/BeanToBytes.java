@@ -11,7 +11,7 @@ import org.n3r.core.lang.RByte;
 import org.n3r.core.lang.RField;
 import org.n3r.core.lang.RStr;
 
-import static org.n3r.core.lang3.Validate.*;
+import static org.apache.commons.lang3.Validate.*;
 
 public class BeanToBytes<T> extends BaseBytes<T> implements ToBytesAware<T> {
     private byte[] bytes = null;

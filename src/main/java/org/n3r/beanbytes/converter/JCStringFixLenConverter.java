@@ -7,8 +7,8 @@ import org.n3r.beanbytes.annotations.JCApplyTo;
 import org.n3r.beanbytes.annotations.JCFixLen;
 import org.n3r.beanbytes.utils.JCDataTypeUtils;
 
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.n3r.core.lang.RByte.*;
-import static org.n3r.core.lang3.StringUtils.*;
 
 @JCApplyTo(value = String.class, linked = JCFixLen.class)
 public class JCStringFixLenConverter extends TypeConverter<String> {
